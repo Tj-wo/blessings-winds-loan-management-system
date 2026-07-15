@@ -1,0 +1,6 @@
+package com.alganiug.systems.loanManagement.models.constants;
+
+public enum LoanStatus {
+    DRAFT, SUBMITTED, KYC_PENDING, KYC_APPROVED, HR_REVIEW, HR_APPROVED, MANAGER_REVIEW, APPROVED, DISBURSED, ACTIVE,
+    COMPLETED, REJECTED, LATE, DEFAULTED, CANCELLED
+}
