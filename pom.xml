@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.alganiug.systems</groupId>
+  <artifactId>loan-management-system</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Alganiug Loan Management System</name>
+  <modules>
+    <module>backend/loan-management-models</module>
+    <module>backend/loan-management-services</module>
+    <module>frontend/loan-management-views</module>
+    <module>frontend/loan-management-web</module>
+  </modules>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>11</maven.compiler.release>
+    <spring.version>5.3.39</spring.version>
+    <hibernate.version>5.6.15.Final</hibernate.version>
+    <javax.persistence.version>2.2</javax.persistence.version>
+    <javax.validation.version>2.0.1.Final</javax.validation.version>
+    <javax.faces.version>2.3.9</javax.faces.version>
+    <javax.servlet.version>4.0.1</javax.servlet.version>
+    <primefaces.version>12.0.0</primefaces.version>
+    <junit.version>5.12.2</junit.version>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency><groupId>org.springframework</groupId><artifactId>spring-framework-bom</artifactId><version>${spring.version}</version><type>pom</type><scope>import</scope></dependency>
+      <dependency><groupId>org.hibernate</groupId><artifactId>hibernate-core</artifactId><version>${hibernate.version}</version></dependency>
+      <dependency><groupId>org.junit</groupId><artifactId>junit-bom</artifactId><version>${junit.version}</version><type>pom</type><scope>import</scope></dependency>
+    </dependencies>
+  </dependencyManagement>
+  <build><pluginManagement><plugins>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.14.0</version><configuration><release>${maven.compiler.release}</release></configuration></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><version>3.5.3</version></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-war-plugin</artifactId><version>3.4.0</version><configuration><failOnMissingWebXml>false</failOnMissingWebXml></configuration></plugin>
+  </plugins></pluginManagement></build>
+</project>
