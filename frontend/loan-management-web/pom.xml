@@ -8,5 +8,6 @@
     <dependency><groupId>com.alganiug.systems</groupId><artifactId>loan-management-views</artifactId><version>${project.version}</version></dependency>
     <dependency><groupId>javax.servlet</groupId><artifactId>javax.servlet-api</artifactId><version>${javax.servlet.version}</version><scope>provided</scope></dependency>
     <dependency><groupId>org.glassfish</groupId><artifactId>javax.faces</artifactId><version>${javax.faces.version}</version><scope>provided</scope></dependency>
+    <dependency><groupId>com.mysql</groupId><artifactId>mysql-connector-j</artifactId><version>8.4.0</version><scope>runtime</scope></dependency>
   </dependencies>
 </project>

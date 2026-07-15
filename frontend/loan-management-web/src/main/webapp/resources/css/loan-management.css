@@ -1,0 +1,3 @@
+/* Project overrides for the PrimeFaces California layout. */
+body { margin: 0; }
+.layout-main { min-height: calc(100vh - 8rem); }

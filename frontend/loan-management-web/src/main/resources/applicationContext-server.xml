@@ -1,116 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:security="http://www.springframework.org/schema/security"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
-			http://www.springframework.org/schema/beans/spring-beans.xsd
-			http://www.springframework.org/schema/util 
-			http://www.springframework.org/schema/util/spring-util-3.0.xsd 
-			http://www.springframework.org/schema/context 
-			http://www.springframework.org/schema/context/spring-context-3.0.xsd 
-			http://www.springframework.org/schema/tx 
-			http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-			http://www.springframework.org/schema/aop 
-			http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-			http://www.springframework.org/schema/security 
-          	http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd">
 
-	<aop:aspectj-autoproxy />
-	<context:annotation-config />
+    <context:annotation-config />
+    <context:component-scan base-package="com.alganiug.systems.loanManagement.core" />
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/db_loan_management?createDatabaseIfNotExist=true&amp;useSSL=false&amp;serverTimezone=Africa/Kampala" />
+        <property name="username" value="root" />
+        <property name="password" value="" />
+    </bean>
 
-	<!-- Library beans -->
-	<context:component-scan
-		base-package="org.sers.webutils.server.core.security.service.impl" />
-	<context:component-scan
-		base-package="org.sers.webutils.server.core.service.impl" />
-	<context:component-scan
-		base-package="org.sers.webutils.server.core.dao.impl" />
-	<context:component-scan
-		base-package="org.sers.webutils.server.core.utils" />
-	<context:component-scan
-		base-package="org.sers.webutils.server.core.service.migrations" />
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="com.alganiug.systems.loanManagement.models" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <property name="databasePlatform" value="org.hibernate.dialect.MySQL8Dialect" />
+                <property name="showSql" value="true" />
+                <property name="generateDdl" value="true" />
+            </bean>
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.format_sql">true</prop>
+            </props>
+        </property>
+    </bean>
 
-	<!-- Project specific beans -->
-	<context:component-scan
-		base-package="org.pahappa.systems.userManual.core.services" />
-	<context:component-scan
-		base-package="org.pahappa.systems.userManual.core.dao.impl" />
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
 
-	<bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName"
-			value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost/user_manual_temp?createDatabaseIfNotExist=true" />
-		<property name="username" value="root" />
-		<property name="password" value="" />
-		
-	</bean>
-	
-	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation">
-			<value>classpath:hibernate.cfg.xml</value>
-		</property>
-		<property name="configurationClass">
-			<value>org.hibernate.cfg.AnnotationConfiguration</value>
-		</property>
-		<property name="hibernateProperties">
-			<props>
-				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
-				<prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
-			</props>
-		</property>
-	</bean>
-
-	<!-- JPA CONFIGURATIONS -->
-	<bean id="entityManagerFactory"
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-
-		<property name="persistenceProviderClass"
-			value="org.hibernate.ejb.HibernatePersistence" />
-		<property name="jpaVendorAdapter">
-			<bean
-				class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
-		</property>
-
-		<property name="packagesToScan">
-			<list>
-				<value>org.sers.webutils.model</value>
-				<value>org.sers.webutils.model.security</value>
-				<value>org.sers.webutils.model.migrations</value>
-				<value>org.sers.webutils.model.bgtasks</value>
-				<value>org.pahappa.systems.userManual.models</value>
-				<value>org.pahappa.systems.userManual.core</value>
-			</list>
-		</property>
-	</bean>
-
-	<bean id="transactionManager"
-		class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory"
-			ref="entityManagerFactory" />
-		<property name="jpaDialect">
-			<bean
-				class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
-		</property>
-	</bean>
-
-	<!-- TRANSACTION MANAGEMENT -->
-	<tx:annotation-driven
-		transaction-manager="transactionManager" />
-
-	<bean id="searchProcessor"
-		class="com.googlecode.genericdao.search.jpa.JPASearchProcessor">
-		<constructor-arg ref="metadataUtil" />
-	</bean>
-
-	<bean id="metadataUtil"
-		class="org.sers.webutils.server.core.dao.jpa.search.JpaAnnotationMetadataUtil" />
+    <tx:annotation-driven transaction-manager="transactionManager" />
 </beans>

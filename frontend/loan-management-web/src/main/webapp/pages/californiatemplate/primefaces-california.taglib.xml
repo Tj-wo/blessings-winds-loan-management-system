@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<facelet-taglib xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="2.3">
+    <namespace>http://alganiug.com/loan-management/california</namespace>
+</facelet-taglib>
