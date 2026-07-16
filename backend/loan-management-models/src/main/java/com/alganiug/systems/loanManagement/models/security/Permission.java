@@ -4,18 +4,18 @@ import com.alganiug.systems.loanManagement.models.base.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
-@Table(name = "roles", uniqueConstraints = @UniqueConstraint(name = "uk_role_name", columnNames = "name"))
-public class Role extends BaseEntity {
+@Table(name = "permissions", uniqueConstraints = @UniqueConstraint(name = "uk_permission_code", columnNames = "code"))
+public class Permission extends BaseEntity {
 
-    @Column(name = "name", nullable = false, length = 50)
+    @Column(name = "code", nullable = false, length = 100)
+
+    private String code;
+
+    @Column(name = "name", nullable = false, length = 150)
 
     private String name;
 
@@ -23,9 +23,13 @@ public class Role extends BaseEntity {
 
     private String description;
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    public String getCode() {
+        return code;
+    }
 
-    private Set<RolePermission> rolePermissions = new LinkedHashSet<>();
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getName() {
         return name;
@@ -41,9 +45,5 @@ public class Role extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Set<RolePermission> getRolePermissions() {
-        return rolePermissions;
     }
 }
