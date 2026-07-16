@@ -1,9 +1,12 @@
 package com.alganiug.systems.loanManagement.models.base;
 
+import com.alganiug.systems.loanManagement.models.constants.RecordStatus;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -17,6 +20,7 @@ import java.util.UUID;
 
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
+
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
@@ -33,13 +37,10 @@ public abstract class BaseEntity implements Serializable {
 
     private LocalDateTime updatedAt;
 
-    @Column(name = "active", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "record_status", nullable = false, length = 20)
 
-    private boolean active = true;
-
-    @Column(name = "deleted", nullable = false)
-
-    private boolean deleted;
+    private RecordStatus recordStatus = RecordStatus.ACTIVE;
 
     @Version
     @Column(name = "version", nullable = false)
@@ -51,16 +52,14 @@ public abstract class BaseEntity implements Serializable {
         LocalDateTime now = LocalDateTime.now();
         createdAt = now;
         updatedAt = now;
+        if (recordStatus == null) {
+            recordStatus = RecordStatus.ACTIVE;
+        }
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-
-    public void softDelete() {
-        deleted = true;
-        active = false;
     }
 
     public UUID getId() {
@@ -75,16 +74,12 @@ public abstract class BaseEntity implements Serializable {
         return updatedAt;
     }
 
-    public boolean isActive() {
-        return active;
+    public RecordStatus getRecordStatus() {
+        return recordStatus;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public boolean isDeleted() {
-        return deleted;
+    public void setRecordStatus(RecordStatus recordStatus) {
+        this.recordStatus = recordStatus;
     }
 
     public long getVersion() {
@@ -93,10 +88,12 @@ public abstract class BaseEntity implements Serializable {
 
     @Override
     public boolean equals(Object other) {
-        if (this == other)
+        if (this == other) {
             return true;
-        if (!(other instanceof BaseEntity))
+        }
+        if (!(other instanceof BaseEntity)) {
             return false;
+        }
         BaseEntity that = (BaseEntity) other;
         return id != null && id.equals(that.id);
     }
