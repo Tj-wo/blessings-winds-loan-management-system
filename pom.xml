@@ -5,7 +5,7 @@
   <artifactId>loan-management-system</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Alganiug Loan Management System</name>
+  <name>Algani Loan Management System</name>
   <modules>
     <module>backend/loan-management-models</module>
     <module>backend/loan-management-services</module>
