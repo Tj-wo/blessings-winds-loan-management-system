@@ -1,0 +1,36 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="dialog-content">
+        <h:form id="dialogForm">
+            <p:messages showDetail="true"/>
+            <div class="dialog-header">
+                <h2>#{notificationFormDialog.editing ? 'Edit Notification' : 'New Notification'}</h2>
+            </div>
+            <div class="form-grid">
+                <div class="field">
+                    <p:outputLabel for="title" value="Title"/>
+                    <p:inputText id="title" value="#{notificationFormDialog.model.title}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="message" value="Message"/>
+                    <p:inputText id="message" value="#{notificationFormDialog.model.message}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="audienceRole" value="Audience role"/>
+                    <p:inputText id="audienceRole" value="#{notificationFormDialog.model.audienceRole}"/>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <p:commandButton value="Cancel" icon="pi pi-times" type="button" onclick="window.parent.PF &amp;&amp; window.parent.PF('dialog').hide()" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Save" icon="pi pi-check" action="#{notificationFormDialog.save}" update="dialogForm"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

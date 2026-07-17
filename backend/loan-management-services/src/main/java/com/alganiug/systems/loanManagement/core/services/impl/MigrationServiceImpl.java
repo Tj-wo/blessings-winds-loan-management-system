@@ -50,24 +50,21 @@ public class MigrationServiceImpl implements MigrationService {
 
     private boolean completed;
 
+    @Override
     @EventListener(ContextRefreshedEvent.class)
     @Transactional
-    public synchronized void onApplicationStarted() {
-        if (!completed) {
-            migrate();
-            completed = true;
+    public synchronized void migrate() {
+        if (completed) {
+            return;
         }
-    }
 
-    @Override
-    @Transactional
-    public void migrate() {
         Map<String, Permission> permissions = seedPermissions();
         Map<String, Role> roles = seedRoles();
         seedRolePermissions(roles, permissions);
         seedSettings();
         seedAdministrator(roles.get(RoleConstants.ROLE_ADMINISTRATOR));
         entityManager.flush();
+        completed = true;
     }
 
     private Map<String, Permission> seedPermissions() {
@@ -140,8 +137,8 @@ public class MigrationServiceImpl implements MigrationService {
 
     private void seedSettings() {
         seedSetting("system.currency", "UGX", SettingValueType.STRING, "GENERAL", "System currency");
-        seedSetting("system.organisation.name", "Algani Uganda", SettingValueType.STRING, "GENERAL",
-                "System owner name");
+        seedSetting("system.organisation.name", "Blessed Winds Loans", SettingValueType.STRING, "GENERAL",
+                "Client business name");
         seedSetting("loan.documents.max-upload-bytes", "10485760", SettingValueType.INTEGER, "DOCUMENTS",
                 "Maximum document upload size");
         seedSetting("security.bootstrap-admin-password-change-required", "true", SettingValueType.BOOLEAN, "SECURITY",

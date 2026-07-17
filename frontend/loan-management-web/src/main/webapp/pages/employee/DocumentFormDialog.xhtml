@@ -1,0 +1,41 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="dialog-content">
+        <h:form id="dialogForm">
+            <p:messages showDetail="true"/>
+            <div class="dialog-header">
+                <h2>#{documentFormDialog.editing ? 'Edit Document' : 'New Document'}</h2>
+            </div>
+            <div class="form-grid">
+                <div class="field">
+                    <p:outputLabel for="originalFilename" value="Original filename"/>
+                    <p:inputText id="originalFilename" value="#{documentFormDialog.model.originalFilename}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="mimeType" value="MIME type"/>
+                    <p:inputText id="mimeType" value="#{documentFormDialog.model.mimeType}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="contentSize" value="Content size"/>
+                    <p:inputNumber id="contentSize" value="#{documentFormDialog.model.contentSize}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="verificationComment" value="Verification comment"/>
+                    <p:inputText id="verificationComment" value="#{documentFormDialog.model.verificationComment}"/>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <p:commandButton value="Cancel" icon="pi pi-times" type="button" onclick="window.parent.PF &amp;&amp; window.parent.PF('dialog').hide()" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Save" icon="pi pi-check" action="#{documentFormDialog.save}" update="dialogForm"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

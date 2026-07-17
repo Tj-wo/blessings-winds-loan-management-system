@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.employee.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.employee.DocumentService;
 import com.alganiug.systems.loanManagement.models.employee.Document;
 import com.alganiug.systems.loanManagement.views.dialogs.DialogForm;
@@ -18,7 +19,8 @@ public class DocumentFormDialog extends DialogForm<Document> {
     private DocumentService service;
 
     public DocumentFormDialog() {
-        super("/pages/employee/DocumentFormDialog", 700, 550);
+        super(LoanManagementHyperLinks.DOCUMENT_FORM_DIALOG, 700, 550);
+        resetModal();
     }
 
     @Override

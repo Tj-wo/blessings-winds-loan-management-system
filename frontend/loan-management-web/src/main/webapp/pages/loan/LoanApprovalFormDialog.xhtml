@@ -1,0 +1,36 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="dialog-content">
+        <h:form id="dialogForm">
+            <p:messages showDetail="true"/>
+            <div class="dialog-header">
+                <h2>#{loanApprovalFormDialog.editing ? 'Edit LoanApproval' : 'New LoanApproval'}</h2>
+            </div>
+            <div class="form-grid">
+                <div class="field">
+                    <p:outputLabel for="offeredAmount" value="Offered amount"/>
+                    <p:inputNumber id="offeredAmount" value="#{loanApprovalFormDialog.model.offeredAmount}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="offeredTermMonths" value="Offered term"/>
+                    <p:inputNumber id="offeredTermMonths" value="#{loanApprovalFormDialog.model.offeredTermMonths}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="comment" value="Decision comment"/>
+                    <p:inputText id="comment" value="#{loanApprovalFormDialog.model.comment}"/>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <p:commandButton value="Cancel" icon="pi pi-times" type="button" onclick="window.parent.PF &amp;&amp; window.parent.PF('dialog').hide()" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Save" icon="pi pi-check" action="#{loanApprovalFormDialog.save}" update="dialogForm"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

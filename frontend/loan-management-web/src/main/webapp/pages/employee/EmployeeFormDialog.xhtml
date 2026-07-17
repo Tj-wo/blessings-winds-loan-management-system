@@ -1,0 +1,61 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="dialog-content">
+        <h:form id="dialogForm">
+            <p:messages showDetail="true"/>
+            <div class="dialog-header">
+                <h2>#{employeeFormDialog.editing ? 'Edit Employee' : 'New Employee'}</h2>
+            </div>
+            <div class="form-grid">
+                <div class="field">
+                    <p:outputLabel for="employeeNumber" value="Employee number"/>
+                    <p:inputText id="employeeNumber" value="#{employeeFormDialog.model.employeeNumber}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="payrollNumber" value="Payroll number"/>
+                    <p:inputText id="payrollNumber" value="#{employeeFormDialog.model.payrollNumber}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="firstName" value="First name"/>
+                    <p:inputText id="firstName" value="#{employeeFormDialog.model.firstName}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="lastName" value="Last name"/>
+                    <p:inputText id="lastName" value="#{employeeFormDialog.model.lastName}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="nationalId" value="National ID"/>
+                    <p:inputText id="nationalId" value="#{employeeFormDialog.model.nationalId}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="phone" value="Phone"/>
+                    <p:inputText id="phone" value="#{employeeFormDialog.model.phone}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="email" value="Email"/>
+                    <p:inputText id="email" value="#{employeeFormDialog.model.email}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="monthlySalary" value="Monthly salary"/>
+                    <p:inputNumber id="monthlySalary" value="#{employeeFormDialog.model.monthlySalary}" decimalPlaces="2"/>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <p:commandButton value="Cancel" icon="pi pi-times" type="button" onclick="window.parent.PF &amp;&amp; window.parent.PF('dialog').hide()" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Save" icon="pi pi-check" action="#{employeeFormDialog.save}" update="dialogForm"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

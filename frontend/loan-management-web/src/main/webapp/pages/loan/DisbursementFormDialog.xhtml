@@ -1,0 +1,36 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="dialog-content">
+        <h:form id="dialogForm">
+            <p:messages showDetail="true"/>
+            <div class="dialog-header">
+                <h2>#{disbursementFormDialog.editing ? 'Edit Disbursement' : 'New Disbursement'}</h2>
+            </div>
+            <div class="form-grid">
+                <div class="field">
+                    <p:outputLabel for="amount" value="Amount"/>
+                    <p:inputNumber id="amount" value="#{disbursementFormDialog.model.amount}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="destination" value="Destination"/>
+                    <p:inputText id="destination" value="#{disbursementFormDialog.model.destination}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="transactionReference" value="Transaction reference"/>
+                    <p:inputText id="transactionReference" value="#{disbursementFormDialog.model.transactionReference}"/>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <p:commandButton value="Cancel" icon="pi pi-times" type="button" onclick="window.parent.PF &amp;&amp; window.parent.PF('dialog').hide()" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Save" icon="pi pi-check" action="#{disbursementFormDialog.save}" update="dialogForm"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

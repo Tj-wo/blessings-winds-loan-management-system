@@ -1,0 +1,33 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/external/external-template.xhtml">
+    <ui:define name="title">Register company | Blessed Winds Loans</ui:define>
+    <ui:define name="content">
+        <h2>Register your company</h2>
+        <p>We will create a unique employee onboarding link after approval.</p>
+        <h:form>
+            <p:panelGrid columns="2" layout="grid" styleClass="form-grid">
+                <p:outputLabel for="name" value="Company name"/>
+                <p:inputText id="name" required="true"/>
+                <p:outputLabel for="registration" value="Registration number"/>
+                <p:inputText id="registration" required="true"/>
+                <p:outputLabel for="address" value="Physical address"/>
+                <p:inputTextarea id="address"/>
+                <p:outputLabel for="contact" value="Contact person"/>
+                <p:inputText id="contact" required="true"/>
+                <p:outputLabel for="email" value="Contact email"/>
+                <p:inputText id="email" type="email" required="true"/>
+                <p:outputLabel for="phone" value="Phone number"/>
+                <p:inputText id="phone" required="true"/>
+            </p:panelGrid>
+            <p:commandButton value="Submit registration" icon="pi pi-building" styleClass="full-button"/>
+            <div class="external-links">
+                <h:link outcome="/pages/external/login" value="Already registered? Sign in"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

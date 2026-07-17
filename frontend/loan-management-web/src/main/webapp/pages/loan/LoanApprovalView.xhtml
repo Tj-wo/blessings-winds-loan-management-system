@@ -1,0 +1,41 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">LoanApproval | Blessed Winds Loans</ui:define>
+    <ui:define name="content">
+        <div class="page-header">
+            <div>
+                <h1>LoanApproval</h1>
+                <p>View and manage loanapproval records.</p>
+            </div>
+            <p:commandButton value="New LoanApproval" icon="pi pi-plus" rendered="#{componentRenderer.hasPermission('LOAN_APPROVAL_CREATE')}" actionListener="#{loanApprovalFormDialog.show}"/>
+        </div>
+        <h:form id="form">
+            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:dataTable id="table" widgetVar="table_loanApproval" value="#{loanApprovalView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
+                <p:column headerText="Search">
+                    <p:inputText placeholder="Filter" onkeyup="PF('table_loanApproval').filter()"/>
+                </p:column>
+                <p:column headerText="Stage">
+                    <h:outputText value="#{row.approvalStage}"/>
+                </p:column>
+                <p:column headerText="Decision">
+                    <h:outputText value="#{row.decision}"/>
+                </p:column>
+                <p:column headerText="Offered amount">
+                    <h:outputText value="#{row.offeredAmount}"/>
+                </p:column>
+                <p:column headerText="Decision time">
+                    <h:outputText value="#{row.decidedAt}"/>
+                </p:column>
+                <p:column headerText="Actions">
+                    <p:commandButton icon="pi pi-trash" title="Delete" styleClass="ui-button-danger ui-button-outlined" action="#{loanApprovalView.delete(row)}" update="table messages"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

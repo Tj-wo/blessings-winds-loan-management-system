@@ -1,0 +1,59 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">Dashboard | Blessed Winds Loans</ui:define>
+    <ui:define name="content">
+        <div class="page-header">
+            <div>
+                <h1>Portfolio command centre</h1>
+                <p>Applications, repayment performance, approvals and portfolio risk.</p>
+            </div>
+            <h:link outcome="/pages/loan/LoanView" styleClass="ui-button ui-widget">
+                <i class="pi pi-list"/>Review queue</h:link>
+        </div>
+        <div class="metric-grid">
+            <div class="metric-card">
+                <span>Active loans</span>
+                <strong>#{loanView.totalRecords}</strong>
+                <small>Current portfolio</small>
+            </div>
+            <div class="metric-card">
+                <span>Employees</span>
+                <strong>#{employeeView.totalRecords}</strong>
+                <small>Registered borrowers</small>
+            </div>
+            <div class="metric-card">
+                <span>Companies</span>
+                <strong>#{companyView.totalRecords}</strong>
+                <small>Payroll partners</small>
+            </div>
+            <div class="metric-card">
+                <span>Repayments</span>
+                <strong>#{repaymentView.totalRecords}</strong>
+                <small>Posted deductions</small>
+            </div>
+        </div>
+        <div class="content-grid">
+            <p:panel header="Manager approval queue">
+                <p:dataTable value="#{loanView.records}" var="loan" rows="8">
+                    <p:column headerText="Reference">#{loan.loanReference}</p:column>
+                    <p:column headerText="Employee">#{loan.employee.firstName} #{loan.employee.lastName}</p:column>
+                    <p:column headerText="Requested">#{loan.requestedAmount}</p:column>
+                    <p:column headerText="Status">#{loan.status}</p:column>
+                </p:dataTable>
+            </p:panel>
+            <p:panel header="Recent notifications">
+                <ui:repeat value="#{notificationView.records}" var="notice">
+                    <div class="notification-item">
+                        <strong>#{notice.title}</strong>
+                        <span>#{notice.message}</span>
+                    </div>
+                </ui:repeat>
+            </p:panel>
+        </div>
+    </ui:define>
+</ui:composition>

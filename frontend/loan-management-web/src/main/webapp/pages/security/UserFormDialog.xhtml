@@ -1,0 +1,41 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="dialog-content">
+        <h:form id="dialogForm">
+            <p:messages showDetail="true"/>
+            <div class="dialog-header">
+                <h2>#{userFormDialog.editing ? 'Edit User' : 'New User'}</h2>
+            </div>
+            <div class="form-grid">
+                <div class="field">
+                    <p:outputLabel for="username" value="Username"/>
+                    <p:inputText id="username" value="#{userFormDialog.model.username}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="displayName" value="Display name"/>
+                    <p:inputText id="displayName" value="#{userFormDialog.model.displayName}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="email" value="Email"/>
+                    <p:inputText id="email" value="#{userFormDialog.model.email}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="passwordHash" value="Password"/>
+                    <p:password id="passwordHash" value="#{userFormDialog.model.passwordHash}" feedback="true" toggleMask="true"/>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <p:commandButton value="Cancel" icon="pi pi-times" type="button" onclick="window.parent.PF &amp;&amp; window.parent.PF('dialog').hide()" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Save" icon="pi pi-check" action="#{userFormDialog.save}" update="dialogForm"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

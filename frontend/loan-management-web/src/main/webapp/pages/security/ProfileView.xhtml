@@ -1,0 +1,35 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">My profile</ui:define>
+    <ui:define name="content">
+        <div class="page-header">
+            <div>
+                <h1>My profile</h1>
+                <p>Account, company scope, employee details and security.</p>
+            </div>
+        </div>
+        <div class="content-grid">
+            <p:panel header="Account">
+                <p:panelGrid columns="2">
+                    <h:outputText value="Name"/>
+                    <h:outputText value="#{authenticationController.loggedInUser.displayName}"/>
+                    <h:outputText value="Username"/>
+                    <h:outputText value="#{authenticationController.loggedInUser.username}"/>
+                    <h:outputText value="Email"/>
+                    <h:outputText value="#{authenticationController.loggedInUser.email}"/>
+                    <h:outputText value="Status"/>
+                    <h:outputText value="#{authenticationController.loggedInUser.accountStatus}"/>
+                </p:panelGrid>
+            </p:panel>
+            <p:panel header="Security">
+                <p>Use a strong password and sign out from shared devices.</p>
+                <h:link outcome="/pages/external/reset-password" value="Change password" styleClass="ui-button ui-widget"/>
+            </p:panel>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.payroll.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.payroll.PayrollDeductionService;
 import com.alganiug.systems.loanManagement.models.payroll.PayrollDeduction;
 import com.alganiug.systems.loanManagement.views.dialogs.DialogForm;
@@ -18,7 +19,8 @@ public class PayrollDeductionFormDialog extends DialogForm<PayrollDeduction> {
     private PayrollDeductionService service;
 
     public PayrollDeductionFormDialog() {
-        super("/pages/payroll/PayrollDeductionFormDialog", 700, 550);
+        super(LoanManagementHyperLinks.PAYROLL_DEDUCTION_FORM_DIALOG, 700, 550);
+        resetModal();
     }
 
     @Override

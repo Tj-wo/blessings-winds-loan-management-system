@@ -1,0 +1,41 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">Role | Blessed Winds Loans</ui:define>
+    <ui:define name="content">
+        <div class="page-header">
+            <div>
+                <h1>Role</h1>
+                <p>View and manage role records.</p>
+            </div>
+            <p:commandButton value="New Role" icon="pi pi-plus" rendered="#{componentRenderer.hasPermission('ROLE_CREATE')}" actionListener="#{roleFormDialog.show}"/>
+        </div>
+        <h:form id="form">
+            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:dataTable id="table" widgetVar="table_role" value="#{roleView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
+                <p:column headerText="Search">
+                    <p:inputText placeholder="Filter" onkeyup="PF('table_role').filter()"/>
+                </p:column>
+                <p:column headerText="Role">
+                    <h:outputText value="#{row.name}"/>
+                </p:column>
+                <p:column headerText="Description">
+                    <h:outputText value="#{row.description}"/>
+                </p:column>
+                <p:column headerText="Record status">
+                    <h:outputText value="#{row.recordStatus}"/>
+                </p:column>
+                <p:column headerText="Version">
+                    <h:outputText value="#{row.version}"/>
+                </p:column>
+                <p:column headerText="Actions">
+                    <p:commandButton icon="pi pi-trash" title="Delete" styleClass="ui-button-danger ui-button-outlined" action="#{roleView.delete(row)}" update="table messages"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

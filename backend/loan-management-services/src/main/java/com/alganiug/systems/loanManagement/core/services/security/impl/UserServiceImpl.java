@@ -4,10 +4,14 @@ import com.alganiug.systems.loanManagement.core.services.impl.GenericServiceImpl
 import com.alganiug.systems.loanManagement.core.services.ServiceValidationException;
 import com.alganiug.systems.loanManagement.core.services.security.UserService;
 import com.alganiug.systems.loanManagement.models.security.User;
+import com.alganiug.systems.loanManagement.models.constants.AccountStatus;
+import com.alganiug.systems.loanManagement.models.constants.RecordStatus;
+import com.alganiug.systems.loanManagement.utils.PasswordUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -52,6 +56,22 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
                 Long.class).setParameter("userId", userId).setParameter("permissionCode", permissionCode.trim())
                 .getSingleResult();
         return matches > 0;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<User> authenticate(String username, String password) {
+        if (username == null || username.trim().isEmpty() || password == null) {
+            return Optional.empty();
+        }
+        Optional<User> user = entityManager
+                .createQuery("select distinct user from User user left join fetch user.roles "
+                        + "where lower(user.username) = :username and user.recordStatus = :recordStatus "
+                        + "and user.accountStatus = :accountStatus", User.class)
+                .setParameter("username", username.trim().toLowerCase())
+                .setParameter("recordStatus", RecordStatus.ACTIVE).setParameter("accountStatus", AccountStatus.ACTIVE)
+                .getResultStream().findFirst();
+        return user.filter(candidate -> PasswordUtil.matches(password, candidate.getPasswordHash()));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.company.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.company.CompanyService;
 import com.alganiug.systems.loanManagement.models.company.Company;
 import com.alganiug.systems.loanManagement.views.dialogs.DialogForm;
@@ -18,7 +19,8 @@ public class CompanyFormDialog extends DialogForm<Company> {
     private CompanyService service;
 
     public CompanyFormDialog() {
-        super("/pages/company/CompanyFormDialog", 700, 550);
+        super(LoanManagementHyperLinks.COMPANY_FORM_DIALOG, 700, 550);
+        resetModal();
     }
 
     @Override

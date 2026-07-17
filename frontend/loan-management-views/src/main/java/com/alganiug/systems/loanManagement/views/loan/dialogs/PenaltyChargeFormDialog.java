@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.loan.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.loan.PenaltyChargeService;
 import com.alganiug.systems.loanManagement.models.loan.PenaltyCharge;
 import com.alganiug.systems.loanManagement.views.dialogs.DialogForm;
@@ -18,7 +19,8 @@ public class PenaltyChargeFormDialog extends DialogForm<PenaltyCharge> {
     private PenaltyChargeService service;
 
     public PenaltyChargeFormDialog() {
-        super("/pages/loan/PenaltyChargeFormDialog", 700, 550);
+        super(LoanManagementHyperLinks.PENALTY_FORM_DIALOG, 700, 550);
+        resetModal();
     }
 
     @Override

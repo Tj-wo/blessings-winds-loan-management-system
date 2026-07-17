@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.payroll.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.payroll.PayrollDeductionBatchService;
 import com.alganiug.systems.loanManagement.models.payroll.PayrollDeductionBatch;
 import com.alganiug.systems.loanManagement.views.dialogs.DialogForm;
@@ -18,7 +19,8 @@ public class PayrollDeductionBatchFormDialog extends DialogForm<PayrollDeduction
     private PayrollDeductionBatchService service;
 
     public PayrollDeductionBatchFormDialog() {
-        super("/pages/payroll/PayrollDeductionBatchFormDialog", 700, 550);
+        super(LoanManagementHyperLinks.PAYROLL_BATCH_FORM_DIALOG, 700, 550);
+        resetModal();
     }
 
     @Override

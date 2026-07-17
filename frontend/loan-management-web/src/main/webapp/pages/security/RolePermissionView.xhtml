@@ -1,0 +1,39 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">RolePermission | Blessed Winds Loans</ui:define>
+    <ui:define name="content">
+        <div class="page-header">
+            <div>
+                <h1>RolePermission</h1>
+                <p>View and manage rolepermission records.</p>
+            </div>
+        </div>
+        <h:form id="form">
+            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:dataTable id="table" widgetVar="table_rolePermission" value="#{rolePermissionView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
+                <p:column headerText="Search">
+                    <p:inputText placeholder="Filter" onkeyup="PF('table_rolePermission').filter()"/>
+                </p:column>
+                <p:column headerText="Role">
+                    <h:outputText value="#{row.role.name}"/>
+                </p:column>
+                <p:column headerText="Permission">
+                    <h:outputText value="#{row.permission.code}"/>
+                </p:column>
+                <p:column headerText="Name">
+                    <h:outputText value="#{row.permission.name}"/>
+                </p:column>
+                <p:column headerText="Status">
+                    <h:outputText value="#{row.recordStatus}"/>
+                </p:column>
+                <p:column headerText="Actions">
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

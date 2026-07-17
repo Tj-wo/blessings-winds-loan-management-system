@@ -1,0 +1,28 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">Loan review</ui:define>
+    <ui:define name="content">
+        <div class="page-header">
+            <div>
+                <h1>Loan approval review</h1>
+                <p>Confirm affordability, offered terms and the mandatory decision comment.</p>
+            </div>
+        </div>
+        <h:form>
+            <p:panelGrid columns="2" layout="grid">
+                <p:outputLabel for="amount" value="Offered amount"/>
+                <p:inputNumber id="amount" value="#{loanApprovalFormDialog.model.offeredAmount}"/>
+                <p:outputLabel for="term" value="Offered term"/>
+                <p:spinner id="term" value="#{loanApprovalFormDialog.model.offeredTermMonths}"/>
+                <p:outputLabel for="comment" value="Decision comment"/>
+                <p:inputTextarea id="comment" value="#{loanApprovalFormDialog.model.comment}" required="true"/>
+            </p:panelGrid>
+            <p:commandButton value="Record decision" icon="pi pi-check" action="#{loanApprovalFormDialog.save}"/>
+        </h:form>
+    </ui:define>
+</ui:composition>

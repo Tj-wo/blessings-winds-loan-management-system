@@ -1,0 +1,39 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">Employee dashboard</ui:define>
+    <ui:define name="content">
+        <div class="page-header">
+            <div>
+                <h1>My loans</h1>
+                <p>Apply, track balances and review your repayment schedule.</p>
+            </div>
+            <h:link outcome="/pages/loan/LoanApplication" styleClass="ui-button ui-widget">
+                <i class="pi pi-plus"/>Apply for a loan</h:link>
+        </div>
+        <div class="metric-grid">
+            <div class="metric-card">
+                <span>Loan applications</span>
+                <strong>#{loanView.totalRecords}</strong>
+            </div>
+            <div class="metric-card">
+                <span>KYC status</span>
+                <strong>Pending review</strong>
+            </div>
+            <div class="metric-card">
+                <span>Next deduction</span>
+                <strong>UGX 0</strong>
+            </div>
+        </div>
+        <p:dataTable value="#{loanView.records}" var="loan">
+            <p:column headerText="Reference">#{loan.loanReference}</p:column>
+            <p:column headerText="Approved">#{loan.approvedAmount}</p:column>
+            <p:column headerText="Outstanding">#{loan.outstandingBalance}</p:column>
+            <p:column headerText="Status">#{loan.status}</p:column>
+        </p:dataTable>
+    </ui:define>
+</ui:composition>

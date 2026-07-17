@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.loan.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.loan.RepaymentScheduleItemService;
 import com.alganiug.systems.loanManagement.models.loan.RepaymentScheduleItem;
 import com.alganiug.systems.loanManagement.views.dialogs.DialogForm;
@@ -18,7 +19,8 @@ public class RepaymentScheduleItemFormDialog extends DialogForm<RepaymentSchedul
     private RepaymentScheduleItemService service;
 
     public RepaymentScheduleItemFormDialog() {
-        super("/pages/loan/RepaymentScheduleItemFormDialog", 700, 550);
+        super(LoanManagementHyperLinks.REPAYMENT_SCHEDULE_FORM_DIALOG, 700, 550);
+        resetModal();
     }
 
     @Override

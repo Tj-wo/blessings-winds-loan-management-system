@@ -1,0 +1,39 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">Reports</ui:define>
+    <ui:define name="content">
+        <div class="page-header">
+            <div>
+                <h1>Report library</h1>
+                <p>Operational, portfolio, payroll and compliance reporting.</p>
+            </div>
+        </div>
+        <div class="report-grid">
+            <p:panel header="Portfolio performance">
+                <p>Applications, approvals, balances, defaults and repayment rate.</p>
+                <p:commandButton value="Export" icon="pi pi-download"/>
+            </p:panel>
+            <p:panel header="Company exposure">
+                <p>Outstanding principal and repayment performance by employer.</p>
+                <p:commandButton value="Export" icon="pi pi-download"/>
+            </p:panel>
+            <p:panel header="Payroll reconciliation">
+                <p>Expected deductions, received amounts and exceptions.</p>
+                <p:commandButton value="Export" icon="pi pi-download"/>
+            </p:panel>
+            <p:panel header="KYC compliance">
+                <p>Pending, verified, rejected and expired employee documents.</p>
+                <p:commandButton value="Export" icon="pi pi-download"/>
+            </p:panel>
+            <p:panel header="Delinquency and penalties">
+                <p>Late schedules, default exposure, penalties and waivers.</p>
+                <p:commandButton value="Export" icon="pi pi-download"/>
+            </p:panel>
+        </div>
+    </ui:define>
+</ui:composition>
