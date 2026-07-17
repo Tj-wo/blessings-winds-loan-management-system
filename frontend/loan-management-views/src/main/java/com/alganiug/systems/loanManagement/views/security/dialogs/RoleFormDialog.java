@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.security.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.security.PermissionService;
 import com.alganiug.systems.loanManagement.core.services.security.RolePermissionService;
 import com.alganiug.systems.loanManagement.core.services.security.RoleService;
@@ -13,7 +14,9 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @ManagedBean(name = "roleFormDialog")
@@ -33,9 +36,11 @@ public class RoleFormDialog extends DialogForm<Role> {
 
     private List<Permission> availablePermissions = Collections.emptyList();
     private List<Permission> selectedPermissions = new ArrayList<>();
+    private Map<Object, Boolean> permissionSelections = new LinkedHashMap<>();
 
     public RoleFormDialog() {
-        super("/pages/security/RoleFormDialog", 800, 650);
+        super(LoanManagementHyperLinks.ROLE_FORM_DIALOG, 800, 650);
+        resetModal();
     }
 
     @Override
@@ -46,6 +51,9 @@ public class RoleFormDialog extends DialogForm<Role> {
     @Override
     public void persist() {
         model = service.saveInstance(model);
+        selectedPermissions = availablePermissions.stream()
+                .filter(permission -> Boolean.TRUE.equals(permissionSelections.get(permission.getId())))
+                .collect(Collectors.toCollection(ArrayList::new));
         rolePermissionService.synchronize(model, selectedPermissions);
     }
 
@@ -68,6 +76,17 @@ public class RoleFormDialog extends DialogForm<Role> {
     private void loadPermissions() {
         availablePermissions = permissionService == null ? Collections.emptyList()
                 : permissionService.getAllInstances();
+    }
+
+    private void preparePermissionSelections() {
+        permissionSelections = new LinkedHashMap<>();
+        for (Permission permission : availablePermissions) {
+            permissionSelections.put(permission.getId(), selectedPermissions.contains(permission));
+        }
+    }
+
+    public Map<Object, Boolean> getPermissionSelections() {
+        return permissionSelections;
     }
 
     public List<Permission> getAvailablePermissions() {

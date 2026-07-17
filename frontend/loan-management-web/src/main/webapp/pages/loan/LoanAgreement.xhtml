@@ -1,0 +1,31 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">Loan agreement</ui:define>
+    <ui:define name="content">
+        <article class="document-card">
+            <header>
+                <h1>Salary-backed loan agreement</h1>
+                <p>Agreement generated from the approved loan terms.</p>
+            </header>
+            <h2>Terms</h2>
+            <p>The borrower authorizes the employer to deduct the agreed monthly installment from payroll until the outstanding loan balance is cleared.</p>
+            <p:dataTable value="#{loanView.records}" var="loan" rows="1">
+                <p:column headerText="Reference">#{loan.loanReference}</p:column>
+                <p:column headerText="Principal">#{loan.approvedAmount}</p:column>
+                <p:column headerText="Interest">#{loan.interestAmount}</p:column>
+                <p:column headerText="Total payable">#{loan.totalPayable}</p:column>
+                <p:column headerText="Installment">#{loan.installmentAmount}</p:column>
+            </p:dataTable>
+            <div class="signature-grid">
+                <div>Borrower signature</div>
+                <div>Authorized officer</div>
+            </div>
+            <p:commandButton value="Print agreement" icon="pi pi-print" type="button" onclick="window.print()"/>
+        </article>
+    </ui:define>
+</ui:composition>

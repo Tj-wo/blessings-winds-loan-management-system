@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.notification.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.notification.NotificationService;
 import com.alganiug.systems.loanManagement.models.notification.Notification;
 import com.alganiug.systems.loanManagement.views.dialogs.DialogForm;
@@ -18,7 +19,8 @@ public class NotificationFormDialog extends DialogForm<Notification> {
     private NotificationService service;
 
     public NotificationFormDialog() {
-        super("/pages/notification/NotificationFormDialog", 700, 550);
+        super(LoanManagementHyperLinks.NOTIFICATION_FORM_DIALOG, 700, 550);
+        resetModal();
     }
 
     @Override

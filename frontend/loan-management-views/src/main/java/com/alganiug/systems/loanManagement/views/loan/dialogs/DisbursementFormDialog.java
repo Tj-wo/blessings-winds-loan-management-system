@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.loan.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.loan.DisbursementService;
 import com.alganiug.systems.loanManagement.models.loan.Disbursement;
 import com.alganiug.systems.loanManagement.views.dialogs.DialogForm;
@@ -18,7 +19,8 @@ public class DisbursementFormDialog extends DialogForm<Disbursement> {
     private DisbursementService service;
 
     public DisbursementFormDialog() {
-        super("/pages/loan/DisbursementFormDialog", 700, 550);
+        super(LoanManagementHyperLinks.DISBURSEMENT_FORM_DIALOG, 700, 550);
+        resetModal();
     }
 
     @Override

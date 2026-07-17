@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>
+            <ui:insert name="title">Blessed Winds Loans</ui:insert>
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <h:outputStylesheet library="css" name="loan-management.css" />
+    </h:head>
+    <h:body styleClass="external-page">
+        <main class="external-shell">
+            <section class="external-brand">
+                <div class="brand-mark">BW</div>
+                <h1>Blessed Winds Loans</h1>
+                <p>Salary-backed lending, payroll recovery and transparent loan servicing.</p>
+            </section>
+            <section class="external-card">
+                <ui:insert name="content" />
+            </section>
+        </main>
+    </h:body>
+</html>

@@ -1,17 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-<h:head>
-    <title><ui:insert name="title">Alganiug Loan Management System</ui:insert></title>
-    <h:outputStylesheet library="css" name="loan-management.css" />
-</h:head>
-<h:body>
-    <div class="layout-wrapper">
-        <ui:include src="topbar.xhtml" />
-        <ui:include src="sidebar.xhtml" />
-        <main class="layout-main">
-            <ui:insert name="content" />
-        </main>
-        <ui:include src="footer.xhtml" />
-    </div>
-</h:body>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>
+            <ui:insert name="title">Blessed Winds Loans</ui:insert>
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <h:outputStylesheet library="primeicons" name="primeicons.css"/>
+        <h:outputStylesheet library="css" name="loan-management.css"/>
+    </h:head>
+    <h:body>
+        <div class="layout-wrapper">
+            <ui:include src="topbar.xhtml"/>
+            <ui:include src="sidebar.xhtml"/>
+            <main class="layout-main">
+                <ui:insert name="content"/>
+            </main>
+            <ui:include src="footer.xhtml"/>
+        </div>
+        <p:ajaxStatus>
+            <f:facet xmlns:f="http://xmlns.jcp.org/jsf/core" name="start">
+                <i class="pi pi-spin pi-spinner global-loader"/>
+            </f:facet>
+        </p:ajaxStatus>
+    </h:body>
 </html>

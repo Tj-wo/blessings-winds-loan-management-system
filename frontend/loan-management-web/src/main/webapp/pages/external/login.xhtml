@@ -1,0 +1,30 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/external/external-template.xhtml">
+    <ui:define name="title">Sign in | Blessed Winds Loans</ui:define>
+    <ui:define name="content">
+        <h2>Welcome back</h2>
+        <p>Sign in to continue to your workspace.</p>
+        <h:form id="loginForm">
+            <p:messages showDetail="true" closable="true" />
+            <div class="field">
+                <p:outputLabel for="username" value="Username"/>
+                <p:inputText id="username" value="#{authenticationController.username}" required="true" autocomplete="username" />
+            </div>
+
+            <div class="field">
+                <p:outputLabel for="password" value="Password"/>
+                <p:password id="password" value="#{authenticationController.password}" required="true" feedback="false" toggleMask="true" autocomplete="current-password" />
+            </div>
+            <p:commandButton value="Sign in" icon="pi pi-sign-in" styleClass="ui-button-info full-button" action="#{authenticationController.login}" update="loginForm" />
+            <div class="external-links">
+                <h:link outcome="/pages/external/forgot-password" value="Forgot password?"/>
+                <h:link outcome="/pages/external/company-registration" value="Register a company"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

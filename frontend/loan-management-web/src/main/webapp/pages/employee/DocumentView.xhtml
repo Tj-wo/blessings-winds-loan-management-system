@@ -1,0 +1,41 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">Document | Blessed Winds Loans</ui:define>
+    <ui:define name="content">
+        <div class="page-header">
+            <div>
+                <h1>Document</h1>
+                <p>View and manage document records.</p>
+            </div>
+            <p:commandButton value="New Document" icon="pi pi-plus" rendered="#{componentRenderer.hasPermission('DOCUMENT_CREATE')}" actionListener="#{documentFormDialog.show}"/>
+        </div>
+        <h:form id="form">
+            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:dataTable id="table" widgetVar="table_document" value="#{documentView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
+                <p:column headerText="Search">
+                    <p:inputText placeholder="Filter" onkeyup="PF('table_document').filter()"/>
+                </p:column>
+                <p:column headerText="Filename">
+                    <h:outputText value="#{row.originalFilename}"/>
+                </p:column>
+                <p:column headerText="Type">
+                    <h:outputText value="#{row.documentType}"/>
+                </p:column>
+                <p:column headerText="Verification">
+                    <h:outputText value="#{row.verificationStatus}"/>
+                </p:column>
+                <p:column headerText="Size">
+                    <h:outputText value="#{row.contentSize}"/>
+                </p:column>
+                <p:column headerText="Actions">
+                    <p:commandButton icon="pi pi-trash" title="Delete" styleClass="ui-button-danger ui-button-outlined" action="#{documentView.delete(row)}" update="table messages"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

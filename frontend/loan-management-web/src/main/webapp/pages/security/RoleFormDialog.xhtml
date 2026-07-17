@@ -1,0 +1,41 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="dialog-content">
+        <h:form id="roleDialog">
+            <p:messages showDetail="true"/>
+            <h2>#{roleFormDialog.editing ? 'Edit role' : 'New role'}</h2>
+            <div class="form-grid">
+                <div class="field">
+                    <p:outputLabel for="name" value="Role name"/>
+                    <p:inputText id="name" value="#{roleFormDialog.model.name}" required="true"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="description" value="Description"/>
+                    <p:inputTextarea id="description" value="#{roleFormDialog.model.description}"/>
+                </div>
+            </div>
+            <h3>Attached permissions</h3>
+            <div class="permission-grid">
+                <ui:repeat value="#{roleFormDialog.availablePermissions}" var="permission">
+                    <div class="permission-option">
+                        <h:selectBooleanCheckbox value="#{roleFormDialog.permissionSelections[permission.id]}"/>
+                        <span>
+                            <strong>#{permission.name}</strong>
+                            <small>#{permission.description}</small>
+                        </span>
+                    </div>
+                </ui:repeat>
+            </div>
+            <div class="dialog-actions">
+                <p:commandButton value="Cancel" type="button" icon="pi pi-times" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Save role" icon="pi pi-check" action="#{roleFormDialog.save}" update="roleDialog"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

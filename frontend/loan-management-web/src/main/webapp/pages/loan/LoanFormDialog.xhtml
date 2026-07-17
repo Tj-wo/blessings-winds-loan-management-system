@@ -1,0 +1,56 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="dialog-content">
+        <h:form id="dialogForm">
+            <p:messages showDetail="true"/>
+            <div class="dialog-header">
+                <h2>#{loanFormDialog.editing ? 'Edit Loan' : 'New Loan'}</h2>
+            </div>
+            <div class="form-grid">
+                <div class="field">
+                    <p:outputLabel for="loanReference" value="Loan reference"/>
+                    <p:inputText id="loanReference" value="#{loanFormDialog.model.loanReference}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="requestedAmount" value="Requested amount"/>
+                    <p:inputNumber id="requestedAmount" value="#{loanFormDialog.model.requestedAmount}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="approvedAmount" value="Approved amount"/>
+                    <p:inputNumber id="approvedAmount" value="#{loanFormDialog.model.approvedAmount}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="purpose" value="Purpose"/>
+                    <p:inputText id="purpose" value="#{loanFormDialog.model.purpose}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="requestedTermMonths" value="Requested term"/>
+                    <p:inputNumber id="requestedTermMonths" value="#{loanFormDialog.model.requestedTermMonths}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="approvedTermMonths" value="Approved term"/>
+                    <p:inputNumber id="approvedTermMonths" value="#{loanFormDialog.model.approvedTermMonths}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="monthlyInterestRate" value="Monthly interest"/>
+                    <p:inputNumber id="monthlyInterestRate" value="#{loanFormDialog.model.monthlyInterestRate}" decimalPlaces="2"/>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <p:commandButton value="Cancel" icon="pi pi-times" type="button" onclick="window.parent.PF &amp;&amp; window.parent.PF('dialog').hide()" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Save" icon="pi pi-check" action="#{loanFormDialog.save}" update="dialogForm"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

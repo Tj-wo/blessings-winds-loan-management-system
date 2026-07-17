@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.settings.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.settings.SystemSettingService;
 import com.alganiug.systems.loanManagement.models.settings.SystemSetting;
 import com.alganiug.systems.loanManagement.views.dialogs.DialogForm;
@@ -18,7 +19,8 @@ public class SystemSettingFormDialog extends DialogForm<SystemSetting> {
     private SystemSettingService service;
 
     public SystemSettingFormDialog() {
-        super("/pages/settings/SystemSettingFormDialog", 700, 550);
+        super(LoanManagementHyperLinks.SETTING_FORM_DIALOG, 700, 550);
+        resetModal();
     }
 
     @Override

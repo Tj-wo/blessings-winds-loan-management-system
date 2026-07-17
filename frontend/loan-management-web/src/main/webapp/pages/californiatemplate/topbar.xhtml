@@ -1,3 +1,25 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <ui:insert name="fragment-content" />
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui">
+    <header class="layout-topbar">
+        <div class="mobile-brand">
+            <span class="brand-mark small">BW</span>
+            <strong>Blessed Winds Loans</strong>
+        </div>
+        <div class="topbar-search">
+            <i class="pi pi-search"/>
+            <p:inputText placeholder="Search loans, employees and companies"/>
+        </div>
+        <div class="topbar-actions">
+            <h:link outcome="/pages/notification/NotificationView" title="Notifications">
+                <i class="pi pi-bell"/>
+            </h:link>
+            <h:link outcome="/pages/security/ProfileView" value="#{authenticationController.loggedInUser.displayName}"/>
+            <h:form>
+                <p:commandButton icon="pi pi-sign-out" title="Sign out" action="#{authenticationController.logout}" styleClass="ui-button-text"/>
+            </h:form>
+        </div>
+    </header>
 </ui:composition>

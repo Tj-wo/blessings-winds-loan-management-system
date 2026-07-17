@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.loan.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.loan.LoanApprovalService;
 import com.alganiug.systems.loanManagement.models.loan.LoanApproval;
 import com.alganiug.systems.loanManagement.views.dialogs.DialogForm;
@@ -18,7 +19,8 @@ public class LoanApprovalFormDialog extends DialogForm<LoanApproval> {
     private LoanApprovalService service;
 
     public LoanApprovalFormDialog() {
-        super("/pages/loan/LoanApprovalFormDialog", 700, 550);
+        super(LoanManagementHyperLinks.LOAN_APPROVAL_FORM_DIALOG, 700, 550);
+        resetModal();
     }
 
     @Override

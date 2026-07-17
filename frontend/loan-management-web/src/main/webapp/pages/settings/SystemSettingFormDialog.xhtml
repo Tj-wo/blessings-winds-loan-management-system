@@ -1,0 +1,41 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="dialog-content">
+        <h:form id="dialogForm">
+            <p:messages showDetail="true"/>
+            <div class="dialog-header">
+                <h2>#{systemSettingFormDialog.editing ? 'Edit SystemSetting' : 'New SystemSetting'}</h2>
+            </div>
+            <div class="form-grid">
+                <div class="field">
+                    <p:outputLabel for="settingKey" value="Setting key"/>
+                    <p:inputText id="settingKey" value="#{systemSettingFormDialog.model.settingKey}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="settingValue" value="Setting value"/>
+                    <p:inputText id="settingValue" value="#{systemSettingFormDialog.model.settingValue}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="category" value="Category"/>
+                    <p:inputText id="category" value="#{systemSettingFormDialog.model.category}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="description" value="Description"/>
+                    <p:inputText id="description" value="#{systemSettingFormDialog.model.description}"/>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <p:commandButton value="Cancel" icon="pi pi-times" type="button" onclick="window.parent.PF &amp;&amp; window.parent.PF('dialog').hide()" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Save" icon="pi pi-check" action="#{systemSettingFormDialog.save}" update="dialogForm"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

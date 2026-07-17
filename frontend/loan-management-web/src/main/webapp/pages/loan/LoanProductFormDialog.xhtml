@@ -1,0 +1,56 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="dialog-content">
+        <h:form id="dialogForm">
+            <p:messages showDetail="true"/>
+            <div class="dialog-header">
+                <h2>#{loanProductFormDialog.editing ? 'Edit LoanProduct' : 'New LoanProduct'}</h2>
+            </div>
+            <div class="form-grid">
+                <div class="field">
+                    <p:outputLabel for="name" value="Product name"/>
+                    <p:inputText id="name" value="#{loanProductFormDialog.model.name}"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="monthlyInterestRate" value="Monthly interest rate"/>
+                    <p:inputNumber id="monthlyInterestRate" value="#{loanProductFormDialog.model.monthlyInterestRate}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="minimumAmount" value="Minimum amount"/>
+                    <p:inputNumber id="minimumAmount" value="#{loanProductFormDialog.model.minimumAmount}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="maximumAmount" value="Maximum amount"/>
+                    <p:inputNumber id="maximumAmount" value="#{loanProductFormDialog.model.maximumAmount}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="minimumTermMonths" value="Minimum term"/>
+                    <p:inputNumber id="minimumTermMonths" value="#{loanProductFormDialog.model.minimumTermMonths}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="maximumTermMonths" value="Maximum term"/>
+                    <p:inputNumber id="maximumTermMonths" value="#{loanProductFormDialog.model.maximumTermMonths}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="maximumSalaryDeductionPercent" value="Salary deduction limit"/>
+                    <p:inputNumber id="maximumSalaryDeductionPercent" value="#{loanProductFormDialog.model.maximumSalaryDeductionPercent}" decimalPlaces="2"/>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <p:commandButton value="Cancel" icon="pi pi-times" type="button" onclick="window.parent.PF &amp;&amp; window.parent.PF('dialog').hide()" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Save" icon="pi pi-check" action="#{loanProductFormDialog.save}" update="dialogForm"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.employee.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.employee.EmployeeService;
 import com.alganiug.systems.loanManagement.models.employee.Employee;
 import com.alganiug.systems.loanManagement.views.dialogs.DialogForm;
@@ -18,7 +19,8 @@ public class EmployeeFormDialog extends DialogForm<Employee> {
     private EmployeeService service;
 
     public EmployeeFormDialog() {
-        super("/pages/employee/EmployeeFormDialog", 700, 550);
+        super(LoanManagementHyperLinks.EMPLOYEE_FORM_DIALOG, 700, 550);
+        resetModal();
     }
 
     @Override

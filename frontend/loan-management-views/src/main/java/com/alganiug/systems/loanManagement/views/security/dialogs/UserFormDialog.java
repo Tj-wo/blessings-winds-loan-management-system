@@ -1,5 +1,6 @@
 package com.alganiug.systems.loanManagement.views.security.dialogs;
 
+import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 import com.alganiug.systems.loanManagement.core.services.security.UserService;
 import com.alganiug.systems.loanManagement.models.security.User;
 import com.alganiug.systems.loanManagement.views.dialogs.DialogForm;
@@ -18,7 +19,8 @@ public class UserFormDialog extends DialogForm<User> {
     private UserService service;
 
     public UserFormDialog() {
-        super("/pages/security/UserFormDialog", 700, 550);
+        super(LoanManagementHyperLinks.USER_FORM_DIALOG, 700, 550);
+        resetModal();
     }
 
     @Override

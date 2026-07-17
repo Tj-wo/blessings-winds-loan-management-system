@@ -1,0 +1,41 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/dialog-template.xhtml">
+    <ui:define name="dialog-content">
+        <h:form id="dialogForm">
+            <p:messages showDetail="true"/>
+            <div class="dialog-header">
+                <h2>#{repaymentScheduleItemFormDialog.editing ? 'Edit RepaymentScheduleItem' : 'New RepaymentScheduleItem'}</h2>
+            </div>
+            <div class="form-grid">
+                <div class="field">
+                    <p:outputLabel for="installmentNumber" value="Installment number"/>
+                    <p:inputNumber id="installmentNumber" value="#{repaymentScheduleItemFormDialog.model.installmentNumber}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="expectedAmount" value="Expected amount"/>
+                    <p:inputNumber id="expectedAmount" value="#{repaymentScheduleItemFormDialog.model.expectedAmount}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="paidAmount" value="Paid amount"/>
+                    <p:inputNumber id="paidAmount" value="#{repaymentScheduleItemFormDialog.model.paidAmount}" decimalPlaces="2"/>
+                </div>
+
+                <div class="field">
+                    <p:outputLabel for="remainingLoanBalance" value="Remaining balance"/>
+                    <p:inputNumber id="remainingLoanBalance" value="#{repaymentScheduleItemFormDialog.model.remainingLoanBalance}" decimalPlaces="2"/>
+                </div>
+            </div>
+            <div class="dialog-actions">
+                <p:commandButton value="Cancel" icon="pi pi-times" type="button" onclick="window.parent.PF &amp;&amp; window.parent.PF('dialog').hide()" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Save" icon="pi pi-check" action="#{repaymentScheduleItemFormDialog.save}" update="dialogForm"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,41 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+
+        template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">Company | Blessed Winds Loans</ui:define>
+    <ui:define name="content">
+        <div class="page-header">
+            <div>
+                <h1>Company</h1>
+                <p>View and manage company records.</p>
+            </div>
+            <p:commandButton value="New Company" icon="pi pi-plus" rendered="#{componentRenderer.hasPermission('COMPANY_CREATE')}" actionListener="#{companyFormDialog.show}"/>
+        </div>
+        <h:form id="form">
+            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:dataTable id="table" widgetVar="table_company" value="#{companyView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
+                <p:column headerText="Search">
+                    <p:inputText placeholder="Filter" onkeyup="PF('table_company').filter()"/>
+                </p:column>
+                <p:column headerText="Company">
+                    <h:outputText value="#{row.name}"/>
+                </p:column>
+                <p:column headerText="Registration number">
+                    <h:outputText value="#{row.registrationNumber}"/>
+                </p:column>
+                <p:column headerText="Contact">
+                    <h:outputText value="#{row.contactPerson}"/>
+                </p:column>
+                <p:column headerText="Status">
+                    <h:outputText value="#{row.status}"/>
+                </p:column>
+                <p:column headerText="Actions">
+                    <p:commandButton icon="pi pi-trash" title="Delete" styleClass="ui-button-danger ui-button-outlined" action="#{companyView.delete(row)}" update="table messages"/>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

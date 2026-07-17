@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
-         version="4.0">
-    <display-name>Alganiug Loan Management System</display-name>
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+    <display-name>Blessed Winds Loans</display-name>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -15,7 +15,7 @@
     </context-param>
     <context-param>
         <param-name>primefaces.THEME</param-name>
-        <param-value>california-blue</param-value>
+        <param-value>luna-blue</param-value>
     </context-param>
 
     <listener>
@@ -33,6 +33,6 @@
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>index.xhtml</welcome-file>
+        <welcome-file>pages/external/login.xhtml</welcome-file>
     </welcome-file-list>
 </web-app>
