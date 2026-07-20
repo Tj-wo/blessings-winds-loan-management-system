@@ -1,34 +1,80 @@
 <ui:composition
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
         xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
         xmlns:p="http://primefaces.org/ui"
-
         template="/pages/external/external-template.xhtml">
-    <ui:define name="title">Employee onboarding | Blessed Winds Loans</ui:define>
+
+    <f:metadata>
+        <f:viewParam name="onboard" value="#{employeeOnboardingController.onboardingCode}"/>
+        <f:viewAction action="#{employeeOnboardingController.loadCompany}"/>
+    </f:metadata>
+
+    <ui:define name="title">Employee registration | Blessed Winds Loans</ui:define>
+
     <ui:define name="content">
-        <h2>Employee self-onboarding</h2>
-        <p>Your registration will be attached to the company represented by this secure link.</p>
-        <h:form enctype="multipart/form-data">
-            <p:panelGrid columns="2" layout="grid" styleClass="form-grid">
-                <p:outputLabel for="first" value="First name"/>
-                <p:inputText id="first" required="true"/>
-                <p:outputLabel for="last" value="Last name"/>
-                <p:inputText id="last" required="true"/>
-                <p:outputLabel for="nationalId" value="National ID"/>
-                <p:inputText id="nationalId" required="true"/>
-                <p:outputLabel for="employeeNo" value="Employee number"/>
-                <p:inputText id="employeeNo" required="true"/>
-                <p:outputLabel for="payrollNo" value="Payroll number"/>
-                <p:inputText id="payrollNo" required="true"/>
-                <p:outputLabel for="phone" value="Phone"/>
-                <p:inputText id="phone" required="true"/>
-                <p:outputLabel for="email" value="Email"/>
-                <p:inputText id="email" type="email"/>
-                <p:outputLabel for="salary" value="Monthly salary (UGX)"/>
-                <p:inputNumber id="salary" decimalPlaces="0" minValue="0"/>
-            </p:panelGrid>
-            <p:commandButton value="Continue to KYC" icon="pi pi-arrow-right" styleClass="full-button"/>
+        <h2>Employee registration</h2>
+
+        <h:panelGroup rendered="#{not empty employeeOnboardingController.company}">
+            <p>Register with <strong>#{employeeOnboardingController.company.name}</strong>. Your details will be
+                reviewed before your account is activated.</p>
+
+            <h:form id="registrationForm">
+                <p:messages id="messages" showDetail="true" closable="true"/>
+
+                <div class="form-grid" rendered="#{not employeeOnboardingController.submitted}">
+                    <div class="field">
+                        <p:outputLabel for="first" value="First name"/>
+                        <p:inputText id="first" value="#{employeeOnboardingController.employee.firstName}" required="true"/>
+                    </div>
+                    <div class="field">
+                        <p:outputLabel for="last" value="Last name"/>
+                        <p:inputText id="last" value="#{employeeOnboardingController.employee.lastName}" required="true"/>
+                    </div>
+                    <div class="field">
+                        <p:outputLabel for="nationalId" value="National ID"/>
+                        <p:inputText id="nationalId" value="#{employeeOnboardingController.employee.nationalId}" required="true"/>
+                    </div>
+                    <div class="field">
+                        <p:outputLabel for="employeeNo" value="Employee number"/>
+                        <p:inputText id="employeeNo" value="#{employeeOnboardingController.employee.employeeNumber}" required="true"/>
+                    </div>
+                    <div class="field">
+                        <p:outputLabel for="payrollNo" value="Payroll number"/>
+                        <p:inputText id="payrollNo" value="#{employeeOnboardingController.employee.payrollNumber}" required="true"/>
+                    </div>
+                    <div class="field">
+                        <p:outputLabel for="phone" value="Phone"/>
+                        <p:inputText id="phone" value="#{employeeOnboardingController.employee.phone}" required="true"/>
+                    </div>
+                    <div class="field">
+                        <p:outputLabel for="email" value="Email"/>
+                        <p:inputText id="email" value="#{employeeOnboardingController.employee.email}" type="email" required="true"/>
+                    </div>
+                    <div class="field">
+                        <p:outputLabel for="salary" value="Monthly salary (UGX)"/>
+                        <p:inputNumber id="salary" value="#{employeeOnboardingController.employee.monthlySalary}"
+                                       decimalPlaces="0" minValue="0" required="true"/>
+                    </div>
+                </div>
+
+                <p:commandButton value="Submit for verification"
+                                 icon="pi pi-check"
+                                 styleClass="full-button"
+                                 rendered="#{not employeeOnboardingController.submitted}"
+                                 action="#{employeeOnboardingController.register}"
+                                 update="@form"/>
+                <div class="external-links">
+                <h:link outcome="/pages/external/login" value="Back to login"
+                        styleClass="app-button app-button-secondary"/>
+            </div>
         </h:form>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{empty employeeOnboardingController.company}">
+            <p:message severity="error" summary="Invalid registration link"
+                       detail="Ask your HR or supervisor for the current employee registration link."/>
+        </h:panelGroup>
     </ui:define>
 </ui:composition>

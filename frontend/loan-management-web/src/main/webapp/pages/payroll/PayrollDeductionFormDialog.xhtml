@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="dialog-actions">
-                <p:commandButton value="Cancel" icon="pi pi-times" type="button" onclick="window.parent.PF &amp;&amp; window.parent.PF('dialog').hide()" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Cancel" icon="pi pi-times" action="#{payrollDeductionFormDialog.cancel}" process="@this" styleClass="ui-button-outlined"/>
                 <p:commandButton value="Save" icon="pi pi-check" action="#{payrollDeductionFormDialog.save}" update="dialogForm"/>
             </div>
         </h:form>

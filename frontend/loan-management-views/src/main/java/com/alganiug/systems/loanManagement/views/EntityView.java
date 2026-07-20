@@ -34,6 +34,11 @@ public abstract class EntityView<T extends BaseEntity> implements Serializable {
         reload();
     }
 
+    protected void setRecords(List<T> records) {
+        this.records = records == null ? Collections.emptyList() : records;
+        this.totalRecords = this.records.size();
+    }
+
     public List<T> getRecords() {
         return records;
     }

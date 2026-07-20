@@ -12,7 +12,7 @@ import javax.persistence.*;
         @UniqueConstraint(name = "uk_company_onboarding", columnNames = "onboarding_code") })
 public class Company extends BaseEntity {
 
-    @Column(name = "company_code", nullable = false, length = 30)
+    @Column(name = "company_code", length = 30)
 
     private String companyCode;
 
@@ -20,7 +20,7 @@ public class Company extends BaseEntity {
 
     private String name;
 
-    @Column(name = "registration_number", nullable = false, length = 80)
+    @Column(name = "registration_number", length = 80)
 
     private String registrationNumber;
 

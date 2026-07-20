@@ -63,6 +63,7 @@ public class RoleFormDialog extends DialogForm<Role> {
         loadPermissions();
         selectedPermissions = rolePermissionService.getByRole(model).stream().map(RolePermission::getPermission)
                 .collect(Collectors.toCollection(ArrayList::new));
+        preparePermissionSelections();
     }
 
     @Override
@@ -71,6 +72,7 @@ public class RoleFormDialog extends DialogForm<Role> {
         editing = false;
         selectedPermissions = new ArrayList<>();
         loadPermissions();
+        preparePermissionSelections();
     }
 
     private void loadPermissions() {

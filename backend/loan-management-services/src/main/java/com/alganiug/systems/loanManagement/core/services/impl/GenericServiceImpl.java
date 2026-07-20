@@ -1,6 +1,9 @@
 package com.alganiug.systems.loanManagement.core.services.impl;
 
 import com.alganiug.systems.loanManagement.core.services.GenericService;
+import com.alganiug.systems.loanManagement.core.services.audit.AuditContext;
+import com.alganiug.systems.loanManagement.models.audit.AuditLog;
+import com.alganiug.systems.loanManagement.models.security.User;
 import com.alganiug.systems.loanManagement.core.services.ServiceOperationException;
 import com.alganiug.systems.loanManagement.core.services.ServiceValidationException;
 import com.alganiug.systems.loanManagement.models.base.BaseEntity;
@@ -12,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -94,8 +98,28 @@ public abstract class GenericServiceImpl<T extends BaseEntity> implements Generi
         T managedEntity = entityManager.contains(entityInstance) ? entityInstance : entityManager.merge(entityInstance);
         managedEntity.setRecordStatus(RecordStatus.DELETED);
         entityManager.merge(managedEntity);
+        recordAudit("DELETE", managedEntity);
     }
 
+    protected void recordAudit(String action, BaseEntity entity) {
+        if (entity == null || entity instanceof AuditLog || entity.getId() == null) {
+            return;
+        }
+
+        AuditLog auditLog = new AuditLog();
+        UUID actorId = AuditContext.getActorId();
+        if (actorId != null) {
+            auditLog.setActor(entityManager.getReference(User.class, actorId));
+        }
+        auditLog.setAction(action);
+        auditLog.setEntityType(entity.getClass().getSimpleName());
+        auditLog.setEntityId(entity.getId().toString());
+        auditLog.setNewValue("recordStatus=" + entity.getRecordStatus() + ", version=" + entity.getVersion());
+        auditLog.setComment(action + " performed through the application");
+        auditLog.setIpAddress(AuditContext.getIpAddress());
+        auditLog.setEventTime(LocalDateTime.now());
+        entityManager.persist(auditLog);
+    }
     protected void validate(T entityInstance) {
         // Domain service implementations override this hook.
     }

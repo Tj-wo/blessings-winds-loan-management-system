@@ -121,7 +121,7 @@ class EntityMappingsTest {
             permissionCount++;
         }
 
-        assertEquals(79, permissionCount);
+        assertEquals(80, permissionCount);
     }
     @Test
     void roleConstantsAreAnnotatedAndUnique() throws IllegalAccessException {
