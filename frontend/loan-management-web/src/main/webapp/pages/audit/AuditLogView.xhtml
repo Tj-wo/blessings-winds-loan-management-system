@@ -7,18 +7,19 @@
         template="/pages/californiatemplate/template.xhtml">
     <ui:define name="title">AuditLog | Blessed Winds Loans</ui:define>
     <ui:define name="content">
-        <div class="page-header">
-            <div>
-                <h1>AuditLog</h1>
-                <p>View and manage auditlog records.</p>
-            </div>
-        </div>
         <h:form id="form">
+            <div class="page-header">
+                <div>
+                    <h1>AuditLog</h1>
+                    <p>View and manage auditlog records.</p>
+                </div>
+            </div>
             <p:messages id="messages" showDetail="true" closable="true"/>
-            <p:dataTable id="table" widgetVar="table_auditLog" value="#{auditLogView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
-                <p:column headerText="Search">
-                    <p:inputText placeholder="Filter" onkeyup="PF('table_auditLog').filter()"/>
-                </p:column>
+            <div class="table-filters">
+                <i class="pi pi-search"/>
+                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_auditLog').filter()"/>
+            </div>
+            <p:dataTable id="table" globalFilterOnly="true" widgetVar="table_auditLog" value="#{auditLogView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
                 <p:column headerText="Time">
                     <h:outputText value="#{row.eventTime}"/>
                 </p:column>

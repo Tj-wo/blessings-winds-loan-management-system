@@ -2,6 +2,8 @@ package com.alganiug.systems.loanManagement.views.controllers;
 
 import com.alganiug.systems.loanManagement.core.services.security.UserService;
 import com.alganiug.systems.loanManagement.models.security.User;
+import com.alganiug.systems.loanManagement.models.security.RoleConstants;
+import com.alganiug.systems.loanManagement.views.render.ComponentRenderer;
 import com.alganiug.systems.loanManagement.views.navigation.LoanManagementHyperLinks;
 
 import javax.faces.application.FacesMessage;
@@ -25,6 +27,9 @@ public class AuthenticationController implements Serializable {
     private String password;
     private User loggedInUser;
 
+    @ManagedProperty(value = "#{componentRenderer}")
+    private ComponentRenderer componentRenderer;
+
     public String login() {
         Optional<User> authenticatedUser = userService.authenticate(username, password);
         if (!authenticatedUser.isPresent()) {
@@ -35,10 +40,25 @@ public class AuthenticationController implements Serializable {
 
         loggedInUser = authenticatedUser.get();
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("loggedInUser", loggedInUser);
+        componentRenderer.setLoggedInUser(loggedInUser);
         password = null;
+        return getDashboard();
+    }
+
+    public String getDashboard() {
+        if (hasLoadedRole(RoleConstants.ROLE_EMPLOYEE)) {
+            return LoanManagementHyperLinks.EMPLOYEE_DASHBOARD;
+        }
+        if (hasLoadedRole(RoleConstants.ROLE_HR_SUPERVISOR)) {
+            return LoanManagementHyperLinks.HR_DASHBOARD;
+        }
         return LoanManagementHyperLinks.DASHBOARD;
     }
 
+    private boolean hasLoadedRole(String roleName) {
+        return loggedInUser != null && loggedInUser.getRoles().stream()
+                .anyMatch(role -> roleName.equals(role.getName()));
+    }
     public String logout() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return LoanManagementHyperLinks.LOGIN;
@@ -62,6 +82,10 @@ public class AuthenticationController implements Serializable {
 
     public User getLoggedInUser() {
         return loggedInUser;
+    }
+
+    public void setComponentRenderer(ComponentRenderer componentRenderer) {
+        this.componentRenderer = componentRenderer;
     }
 
     public void setUserService(UserService userService) {

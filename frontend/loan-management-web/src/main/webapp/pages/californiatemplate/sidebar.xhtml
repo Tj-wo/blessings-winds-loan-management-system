@@ -11,17 +11,13 @@
             </div>
         </div>
         <nav class="sidebar-menu">
-            <h:link outcome="/pages/dashboard/Dashboard" rendered="#{componentRenderer.administrator}">
+            <h:link outcome="#{authenticationController.dashboard}">
                 <i class="pi pi-home"/>
                 <span>Dashboard</span>
             </h:link>
-            <h:link outcome="/pages/dashboard/HrDashboard" rendered="#{componentRenderer.hasViewPayrollBatchPerm}">
-                <i class="pi pi-briefcase"/>
-                <span>Payroll desk</span>
-            </h:link>
-            <h:link outcome="/pages/dashboard/EmployeeDashboard" rendered="#{componentRenderer.hasCreateLoanPerm}">
-                <i class="pi pi-wallet"/>
-                <span>My dashboard</span>
+            <h:link outcome="/pages/security/ProfileView" rendered="#{componentRenderer.hasRole('Employee')}">
+                <i class="pi pi-user"/>
+                <span>My profile</span>
             </h:link>
             <div class="menu-caption">Lending</div>
             <h:link outcome="/pages/loan/LoanView" rendered="#{componentRenderer.hasViewLoanPerm}">
@@ -53,13 +49,13 @@
                 <i class="pi pi-building"/>
                 <span>Companies</span>
             </h:link>
-            <h:link outcome="/pages/employee/EmployeeView" rendered="#{componentRenderer.hasViewEmployeePerm}">
+            <h:link outcome="/pages/employee/EmployeeView" rendered="#{componentRenderer.hasViewEmployeePerm and not componentRenderer.hasRole('Employee')}">
                 <i class="pi pi-users"/>
                 <span>Employees</span>
             </h:link>
             <h:link outcome="/pages/employee/DocumentView" rendered="#{componentRenderer.hasViewDocumentPerm}">
                 <i class="pi pi-id-card"/>
-                <span>KYC documents</span>
+                <span>Upload KYC</span>
             </h:link>
             <h:link outcome="/pages/payroll/PayrollDeductionBatchView" rendered="#{componentRenderer.hasViewPayrollBatchPerm}">
                 <i class="pi pi-upload"/>

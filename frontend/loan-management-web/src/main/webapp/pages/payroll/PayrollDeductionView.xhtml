@@ -7,19 +7,19 @@
         template="/pages/californiatemplate/template.xhtml">
     <ui:define name="title">PayrollDeduction | Blessed Winds Loans</ui:define>
     <ui:define name="content">
-        <div class="page-header">
-            <div>
-                <h1>PayrollDeduction</h1>
-                <p>View and manage payrolldeduction records.</p>
-            </div>
-            <p:commandButton value="New PayrollDeduction" icon="pi pi-plus" rendered="#{componentRenderer.hasPermission('PAYROLL_DEDUCTION_CREATE')}" actionListener="#{payrollDeductionFormDialog.show}"/>
-        </div>
         <h:form id="form">
+            <div class="page-header">
+                <div>
+                    <h1>PayrollDeduction</h1>
+                    <p>View and manage payrolldeduction records.</p>
+                </div>
+            </div>
             <p:messages id="messages" showDetail="true" closable="true"/>
-            <p:dataTable id="table" widgetVar="table_payrollDeduction" value="#{payrollDeductionView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
-                <p:column headerText="Search">
-                    <p:inputText placeholder="Filter" onkeyup="PF('table_payrollDeduction').filter()"/>
-                </p:column>
+            <div class="table-filters">
+                <i class="pi pi-search"/>
+                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_payrollDeduction').filter()"/>
+            </div>
+            <p:dataTable id="table" globalFilterOnly="true" widgetVar="table_payrollDeduction" value="#{payrollDeductionView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
                 <p:column headerText="Expected">
                     <h:outputText value="#{row.expectedAmount}"/>
                 </p:column>
@@ -33,7 +33,7 @@
                     <h:outputText value="#{row.reconciliationComment}"/>
                 </p:column>
                 <p:column headerText="Actions">
-                    <p:commandButton icon="pi pi-trash" title="Delete" styleClass="ui-button-danger ui-button-outlined" action="#{payrollDeductionView.delete(row)}" update="table messages"/>
+                    <p:commandButton icon="pi pi-trash" rendered="#{componentRenderer.hasPermission('PAYROLL_DEDUCTION_DELETE')}" title="Delete" styleClass="ui-button-danger ui-button-outlined" action="#{payrollDeductionView.delete(row)}" update="@form"/>
                 </p:column>
             </p:dataTable>
         </h:form>

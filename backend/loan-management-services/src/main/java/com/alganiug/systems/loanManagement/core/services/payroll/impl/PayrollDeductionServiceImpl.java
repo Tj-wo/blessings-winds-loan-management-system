@@ -5,6 +5,10 @@ import com.alganiug.systems.loanManagement.core.services.ServiceValidationExcept
 import com.alganiug.systems.loanManagement.core.services.payroll.PayrollDeductionService;
 import com.alganiug.systems.loanManagement.models.payroll.PayrollDeduction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PayrollDeductionServiceImpl extends GenericServiceImpl<PayrollDeduction>
@@ -12,6 +16,14 @@ public class PayrollDeductionServiceImpl extends GenericServiceImpl<PayrollDeduc
 
     public PayrollDeductionServiceImpl() {
         super(PayrollDeduction.class);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PayrollDeduction> getForCompany(UUID companyId) {
+        if (companyId == null) return Collections.emptyList();
+        return entityManager.createQuery("select payrolldeduction from PayrollDeduction payrolldeduction where payrolldeduction.batch.company.id = :companyId and payrolldeduction.recordStatus = com.alganiug.systems.loanManagement.models.constants.RecordStatus.ACTIVE order by payrolldeduction.createdAt desc", PayrollDeduction.class)
+                .setParameter("companyId", companyId).getResultList();
     }
 
     @Override

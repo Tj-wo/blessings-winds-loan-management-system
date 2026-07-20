@@ -15,9 +15,18 @@
     </context-param>
     <context-param>
         <param-name>primefaces.THEME</param-name>
-        <param-value>luna-blue</param-value>
+        <param-value>saga</param-value>
     </context-param>
 
+    <filter>
+        <filter-name>pageAuthorizationFilter</filter-name>
+        <filter-class>com.alganiug.systems.loanManagement.web.security.PageAuthorizationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>pageAuthorizationFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -32,6 +41,10 @@
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/pages/error/404.xhtml</location>
+    </error-page>
     <welcome-file-list>
         <welcome-file>pages/external/login.xhtml</welcome-file>
     </welcome-file-list>

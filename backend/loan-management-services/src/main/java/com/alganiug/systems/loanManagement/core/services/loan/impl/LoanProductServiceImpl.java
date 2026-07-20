@@ -27,7 +27,9 @@ public class LoanProductServiceImpl extends GenericServiceImpl<LoanProduct> impl
         if (product.getMinimumTermMonths() < 1 || product.getMaximumTermMonths() < product.getMinimumTermMonths()) {
             throw new ServiceValidationException("Loan product term limits are invalid");
         }
-        requirePresent(product.getMaximumSalaryDeductionPercent(), "Maximum salary deduction percent");
+        if (product.getMaximumSalaryDeductionPercent() == null) {
+            product.setMaximumSalaryDeductionPercent(new BigDecimal("100"));
+        }
         if (product.getMaximumSalaryDeductionPercent().compareTo(BigDecimal.ZERO) < 0
                 || product.getMaximumSalaryDeductionPercent().compareTo(new BigDecimal("100")) > 0) {
             throw new ServiceValidationException("Maximum salary deduction percent must be between 0 and 100");

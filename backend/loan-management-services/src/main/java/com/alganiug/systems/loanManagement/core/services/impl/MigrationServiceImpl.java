@@ -223,24 +223,40 @@ public class MigrationServiceImpl implements MigrationService {
         }
     }
 
+    private boolean isAdministratorPermission(String code) {
+        return startsWithAny(code, "USER_", "ROLE_", "PERMISSION_", "COMPANY_", "EMPLOYEE_", "DOCUMENT_",
+                "LOAN_PRODUCT_", "SYSTEM_SETTING_", "AUDIT_LOG_", "NOTIFICATION_")
+                || code.endsWith("_VIEW") || code.equals("REPORT_EXPORT");
+    }
+
     private boolean isLoanManagerPermission(String code) {
-        return startsWithAny(code, "LOAN_", "LOAN_PRODUCT_", "DISBURSEMENT_", "REPAYMENT_", "PENALTY_", "PAYROLL_")
-                || code.equals("COMPANY_VIEW") || code.equals("EMPLOYEE_VIEW") || code.equals("DOCUMENT_VIEW")
-                || code.equals("REPORT_EXPORT");
+        return startsWithAny(code, "LOAN_PRODUCT_")
+                || code.equals("LOAN_VIEW") || code.equals("LOAN_EDIT")
+                || code.equals("LOAN_APPROVAL_VIEW") || code.equals("LOAN_APPROVAL_CREATE")
+                || code.equals("LOAN_APPROVE") || code.equals("LOAN_REJECT") || code.equals("LOAN_DISBURSE")
+                || code.equals("DISBURSEMENT_VIEW") || code.equals("REPAYMENT_VIEW")
+                || code.equals("REPAYMENT_SCHEDULE_VIEW") || code.equals("PENALTY_VIEW")
+                || code.equals("PENALTY_WAIVE") || code.equals("COMPANY_VIEW")
+                || code.equals("EMPLOYEE_VIEW") || code.equals("DOCUMENT_VIEW")
+                || code.equals("REPORT_EXPORT") || code.equals("NOTIFICATION_VIEW");
     }
 
     private boolean isHrPermission(String code) {
-        return startsWithAny(code, "COMPANY_", "EMPLOYEE_", "DOCUMENT_", "PAYROLL_") || code.equals("LOAN_VIEW")
-                || code.equals("LOAN_APPROVE") || code.equals("LOAN_REJECT") || code.equals("DOCUMENT_VERIFY")
-                || code.equals("REPORT_EXPORT");
+        return code.equals("COMPANY_VIEW") || startsWithAny(code, "EMPLOYEE_", "DOCUMENT_")
+                || code.equals("PAYROLL_BATCH_CREATE") || code.equals("PAYROLL_BATCH_VIEW")
+                || code.equals("PAYROLL_BATCH_EDIT") || code.equals("PAYROLL_BATCH_POST")
+                || code.equals("PAYROLL_DEDUCTION_VIEW") || code.equals("LOAN_VIEW")
+                || code.equals("LOAN_APPROVAL_CREATE") || code.equals("LOAN_APPROVAL_VIEW")
+                || code.equals("LOAN_APPROVE") || code.equals("LOAN_REJECT")
+                || code.equals("REPORT_EXPORT") || code.equals("NOTIFICATION_VIEW");
     }
 
     private boolean isEmployeePermission(String code) {
-        return code.equals("LOAN_CREATE") || code.equals("LOAN_VIEW") || code.equals("DOCUMENT_CREATE")
+        return code.equals("LOAN_CREATE") || code.equals("LOAN_VIEW") || code.equals("LOAN_EDIT")
+                || code.equals("DOCUMENT_CREATE")
                 || code.equals("DOCUMENT_VIEW") || code.equals("NOTIFICATION_VIEW") || code.equals("EMPLOYEE_VIEW")
                 || code.equals("EMPLOYEE_EDIT");
     }
-
     private boolean startsWithAny(String value, String... prefixes) {
         return Arrays.stream(prefixes).anyMatch(value::startsWith);
     }

@@ -7,18 +7,19 @@
         template="/pages/californiatemplate/template.xhtml">
     <ui:define name="title">RolePermission | Blessed Winds Loans</ui:define>
     <ui:define name="content">
-        <div class="page-header">
-            <div>
-                <h1>RolePermission</h1>
-                <p>View and manage rolepermission records.</p>
-            </div>
-        </div>
         <h:form id="form">
+            <div class="page-header">
+                <div>
+                    <h1>RolePermission</h1>
+                    <p>View and manage rolepermission records.</p>
+                </div>
+            </div>
             <p:messages id="messages" showDetail="true" closable="true"/>
-            <p:dataTable id="table" widgetVar="table_rolePermission" value="#{rolePermissionView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
-                <p:column headerText="Search">
-                    <p:inputText placeholder="Filter" onkeyup="PF('table_rolePermission').filter()"/>
-                </p:column>
+            <div class="table-filters">
+                <i class="pi pi-search"/>
+                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_rolePermission').filter()"/>
+            </div>
+            <p:dataTable id="table" globalFilterOnly="true" widgetVar="table_rolePermission" value="#{rolePermissionView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
                 <p:column headerText="Role">
                     <h:outputText value="#{row.role.name}"/>
                 </p:column>

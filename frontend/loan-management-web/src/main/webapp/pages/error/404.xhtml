@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <title>Page not found | Blessed Winds Loans</title>
+    <h:outputStylesheet library="css" name="loan-management.css"/>
+</h:head>
+<h:body styleClass="not-found-page">
+    <main class="not-found-card">
+        <span class="not-found-code">404</span>
+        <h1>Page not found</h1>
+        <p>The requested page does not exist or is not available to your account.</p>
+        <h:link outcome="#{authenticationController.dashboard}"
+                value="Return to dashboard"
+                styleClass="app-button app-button-primary"/>
+    </main>
+</h:body>
+</html>

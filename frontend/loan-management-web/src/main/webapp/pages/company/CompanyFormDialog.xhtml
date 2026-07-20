@@ -12,19 +12,10 @@
                 <h2>#{companyFormDialog.editing ? 'Edit Company' : 'New Company'}</h2>
             </div>
             <div class="form-grid">
-                <div class="field">
-                    <p:outputLabel for="companyCode" value="Company code"/>
-                    <p:inputText id="companyCode" value="#{companyFormDialog.model.companyCode}"/>
-                </div>
 
                 <div class="field">
                     <p:outputLabel for="name" value="Company name"/>
                     <p:inputText id="name" value="#{companyFormDialog.model.name}"/>
-                </div>
-
-                <div class="field">
-                    <p:outputLabel for="registrationNumber" value="Registration number"/>
-                    <p:inputText id="registrationNumber" value="#{companyFormDialog.model.registrationNumber}"/>
                 </div>
 
                 <div class="field">
@@ -46,14 +37,9 @@
                     <p:outputLabel for="contactPhone" value="Contact phone"/>
                     <p:inputText id="contactPhone" value="#{companyFormDialog.model.contactPhone}"/>
                 </div>
-
-                <div class="field">
-                    <p:outputLabel for="onboardingCode" value="Onboarding code"/>
-                    <p:inputText id="onboardingCode" value="#{companyFormDialog.model.onboardingCode}"/>
-                </div>
             </div>
             <div class="dialog-actions">
-                <p:commandButton value="Cancel" icon="pi pi-times" type="button" onclick="window.parent.PF &amp;&amp; window.parent.PF('dialog').hide()" styleClass="ui-button-outlined"/>
+                <p:commandButton value="Cancel" icon="pi pi-times" action="#{companyFormDialog.cancel}" process="@this" styleClass="ui-button-outlined"/>
                 <p:commandButton value="Save" icon="pi pi-check" action="#{companyFormDialog.save}" update="dialogForm"/>
             </div>
         </h:form>

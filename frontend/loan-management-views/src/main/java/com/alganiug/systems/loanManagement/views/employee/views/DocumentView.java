@@ -3,6 +3,8 @@ package com.alganiug.systems.loanManagement.views.employee.views;
 import com.alganiug.systems.loanManagement.core.services.employee.DocumentService;
 import com.alganiug.systems.loanManagement.models.employee.Document;
 import com.alganiug.systems.loanManagement.views.EntityView;
+import com.alganiug.systems.loanManagement.views.controllers.AuthenticationController;
+import com.alganiug.systems.loanManagement.models.security.User;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -17,11 +19,27 @@ public class DocumentView extends EntityView<Document> {
     @ManagedProperty(value = "#{documentServiceImpl}")
     private DocumentService service;
 
+    @ManagedProperty(value = "#{authenticationController}")
+    private AuthenticationController authenticationController;
+
     @Override
     protected DocumentService getService() {
         return service;
     }
 
+    @Override
+    public void reload() {
+        User user = authenticationController == null ? null : authenticationController.getLoggedInUser();
+        if (user != null && user.getEmployee() != null) {
+            setRecords(service.getDocumentsForEmployee(user.getEmployee().getId()));
+            return;
+        }
+        super.reload();
+    }
+
+    public void setAuthenticationController(AuthenticationController authenticationController) {
+        this.authenticationController = authenticationController;
+    }
     public void setService(DocumentService service) {
         this.service = service;
     }

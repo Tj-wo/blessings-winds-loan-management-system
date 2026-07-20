@@ -211,7 +211,7 @@ public class ComponentRenderer implements Serializable {
     }
 
     private boolean allowed(String permissionCode) {
-        return administrator || permissionCodes.contains(permissionCode);
+        return permissionCodes.contains(permissionCode);
     }
 
     public boolean hasPermission(String permissionCode) {

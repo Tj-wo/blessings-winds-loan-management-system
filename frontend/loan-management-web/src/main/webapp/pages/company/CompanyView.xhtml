@@ -3,28 +3,35 @@
         xmlns:h="http://xmlns.jcp.org/jsf/html"
         xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
         xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
 
         template="/pages/californiatemplate/template.xhtml">
     <ui:define name="title">Company | Blessed Winds Loans</ui:define>
     <ui:define name="content">
-        <div class="page-header">
-            <div>
-                <h1>Company</h1>
-                <p>View and manage company records.</p>
-            </div>
-            <p:commandButton value="New Company" icon="pi pi-plus" rendered="#{componentRenderer.hasPermission('COMPANY_CREATE')}" actionListener="#{companyFormDialog.show}"/>
-        </div>
         <h:form id="form">
+            <div class="page-header">
+                <div>
+                    <h1>Company</h1>
+                    <p>View and manage company records.</p>
+                </div>
+                <p:commandButton value="New Company" icon="pi pi-plus" rendered="#{componentRenderer.hasPermission('COMPANY_CREATE')}" action="#{companyFormDialog.show}">
+                    <p:ajax event="dialogReturn" update="@form"/>
+                </p:commandButton>
+            </div>
             <p:messages id="messages" showDetail="true" closable="true"/>
-            <p:dataTable id="table" widgetVar="table_company" value="#{companyView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
-                <p:column headerText="Search">
-                    <p:inputText placeholder="Filter" onkeyup="PF('table_company').filter()"/>
-                </p:column>
+            <div class="table-filters">
+                <i class="pi pi-search"/>
+                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_company').filter()"/>
+            </div>
+            <p:dataTable id="table" globalFilterOnly="true" widgetVar="table_company" value="#{companyView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
                 <p:column headerText="Company">
                     <h:outputText value="#{row.name}"/>
                 </p:column>
-                <p:column headerText="Registration number">
-                    <h:outputText value="#{row.registrationNumber}"/>
+                <p:column headerText="Employee registration link">
+                    <h:outputLink value="#{request.contextPath}/pages/external/employee-onboarding.xhtml">
+                        <f:param name="onboard" value="#{row.onboardingCode}"/>
+                        Register employees
+                    </h:outputLink>
                 </p:column>
                 <p:column headerText="Contact">
                     <h:outputText value="#{row.contactPerson}"/>
@@ -33,7 +40,15 @@
                     <h:outputText value="#{row.status}"/>
                 </p:column>
                 <p:column headerText="Actions">
-                    <p:commandButton icon="pi pi-trash" title="Delete" styleClass="ui-button-danger ui-button-outlined" action="#{companyView.delete(row)}" update="table messages"/>
+                    <p:commandButton icon="pi pi-pencil"
+                                     title="Edit company"
+                                     rendered="#{componentRenderer.hasPermission('COMPANY_EDIT')}"
+                                     action="#{companyFormDialog.edit(row)}"
+                                     styleClass="ui-button-outlined">
+                        <p:ajax event="dialogReturn" update="@form"/>
+                    </p:commandButton>
+
+                    <p:commandButton icon="pi pi-trash" rendered="#{componentRenderer.hasPermission('COMPANY_DELETE')}" title="Delete" styleClass="ui-button-danger ui-button-outlined" action="#{companyView.delete(row)}" update="@form"/>
                 </p:column>
             </p:dataTable>
         </h:form>

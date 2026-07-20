@@ -3,37 +3,97 @@
         xmlns:h="http://xmlns.jcp.org/jsf/html"
         xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
         xmlns:p="http://primefaces.org/ui"
-
         template="/pages/californiatemplate/template.xhtml">
-    <ui:define name="title">Employee dashboard</ui:define>
+
+    <ui:define name="title">My dashboard | Blessed Winds Loans</ui:define>
+
     <ui:define name="content">
-        <div class="page-header">
+        <section class="employee-hero">
             <div>
-                <h1>My loans</h1>
-                <p>Apply, track balances and review your repayment schedule.</p>
+                <span class="eyebrow">Employee self-service</span>
+                <h1>Welcome, #{authenticationController.loggedInUser.displayName}</h1>
+                <p>Apply for a salary-backed loan, complete application KYC and follow every approval step.</p>
             </div>
-            <h:link outcome="/pages/loan/LoanApplication" styleClass="ui-button ui-widget">
-                <i class="pi pi-plus"/>Apply for a loan</h:link>
-        </div>
-        <div class="metric-grid">
-            <div class="metric-card">
-                <span>Loan applications</span>
+            <h:link outcome="/pages/loan/LoanApplication" styleClass="hero-action">
+                <i class="pi pi-plus-circle"/>
+                <span>Start a new application</span>
+            </h:link>
+        </section>
+
+        <div class="employee-metrics">
+            <div class="metric-card accent-blue">
+                <i class="pi pi-file"/>
+                <span>My applications</span>
                 <strong>#{loanView.totalRecords}</strong>
+                <small>Only your loan records</small>
             </div>
-            <div class="metric-card">
+            <div class="metric-card accent-amber">
+                <i class="pi pi-id-card"/>
                 <span>KYC status</span>
-                <strong>Pending review</strong>
+                <strong>#{authenticationController.loggedInUser.employee.kycStatus}</strong>
+                <small>Upload documents per application</small>
             </div>
-            <div class="metric-card">
-                <span>Next deduction</span>
-                <strong>UGX 0</strong>
+            <div class="metric-card accent-green">
+                <i class="pi pi-building"/>
+                <span>Employer</span>
+                <strong>#{authenticationController.loggedInUser.employee.company.name}</strong>
+                <small>Payroll-linked account</small>
             </div>
         </div>
-        <p:dataTable value="#{loanView.records}" var="loan">
-            <p:column headerText="Reference">#{loan.loanReference}</p:column>
-            <p:column headerText="Approved">#{loan.approvedAmount}</p:column>
-            <p:column headerText="Outstanding">#{loan.outstandingBalance}</p:column>
-            <p:column headerText="Status">#{loan.status}</p:column>
-        </p:dataTable>
+
+        <div class="quick-action-grid">
+            <h:link outcome="/pages/loan/LoanApplication" styleClass="quick-action-card">
+                <i class="pi pi-wallet"/>
+                <span><strong>Apply for a loan</strong><small>Enter the amount, term and purpose</small></span>
+                <i class="pi pi-arrow-right"/>
+            </h:link>
+            <h:link outcome="/pages/employee/DocumentView" styleClass="quick-action-card">
+                <i class="pi pi-upload"/>
+                <span><strong>Upload application KYC</strong><small>Attach PDF or image evidence</small></span>
+                <i class="pi pi-arrow-right"/>
+            </h:link>
+            <h:link outcome="/pages/security/ProfileView" styleClass="quick-action-card">
+                <i class="pi pi-user-edit"/>
+                <span><strong>Review my profile</strong><small>Confirm employment and contact details</small></span>
+                <i class="pi pi-arrow-right"/>
+            </h:link>
+        </div>
+
+        <section class="section-card">
+            <div class="section-heading">
+                <div>
+                    <h2>My loan applications</h2>
+                    <p>Progress from submission and KYC to payroll repayment and completion.</p>
+                </div>
+                <h:link outcome="/pages/loan/LoanView" value="View all"/>
+            </div>
+
+            <p:dataTable value="#{loanView.records}" var="loan" reflow="true"
+                         emptyMessage="You have not submitted a loan application yet.">
+                <p:column headerText="Application">
+                    <strong>#{loan.loanReference}</strong>
+                    <small class="table-subtitle">#{loan.purpose}</small>
+                </p:column>
+                <p:column headerText="Requested">
+                    <h:outputText value="UGX #{loan.requestedAmount}"/>
+                </p:column>
+                <p:column headerText="Outstanding">
+                    <h:outputText value="UGX #{loan.outstandingBalance}"/>
+                </p:column>
+                <p:column headerText="Status">
+                    <span class="status-pill">#{loan.status}</span>
+                </p:column>
+                <p:column headerText="Next step">
+                    <h:link outcome="/pages/employee/DocumentView"
+                            value="Upload documents, "
+                            rendered="#{loan.status eq 'SUBMITTED' or loan.status eq 'KYC_PENDING'}"/>
+                    <h:link outcome="/pages/loan/LoanAgreement"
+                            value="Print agreement"
+                            rendered="#{loan.status ne 'DRAFT'}">
+                        <f:param xmlns:f="http://xmlns.jcp.org/jsf/core" name="loan" value="#{loan.id}"/>
+                    </h:link>
+                </p:column>
+            </p:dataTable>
+        </section>
     </ui:define>
 </ui:composition>

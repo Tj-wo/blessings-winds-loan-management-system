@@ -4,6 +4,9 @@ import com.alganiug.systems.loanManagement.core.services.impl.GenericServiceImpl
 import com.alganiug.systems.loanManagement.core.services.ServiceValidationException;
 import com.alganiug.systems.loanManagement.core.services.security.UserService;
 import com.alganiug.systems.loanManagement.models.security.User;
+import com.alganiug.systems.loanManagement.models.security.Role;
+import com.alganiug.systems.loanManagement.models.security.RoleConstants;
+import com.alganiug.systems.loanManagement.models.employee.Employee;
 import com.alganiug.systems.loanManagement.models.constants.AccountStatus;
 import com.alganiug.systems.loanManagement.models.constants.RecordStatus;
 import com.alganiug.systems.loanManagement.utils.PasswordUtil;
@@ -17,6 +20,7 @@ import java.util.UUID;
 
 @Service
 public class UserServiceImpl extends GenericServiceImpl<User> implements UserService {
+
 
     public UserServiceImpl() {
         super(User.class);
@@ -65,7 +69,7 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
             return Optional.empty();
         }
         Optional<User> user = entityManager
-                .createQuery("select distinct user from User user left join fetch user.roles "
+                .createQuery("select distinct user from User user left join fetch user.roles left join fetch user.company scopedCompany left join fetch user.employee employee left join fetch employee.company "
                         + "where lower(user.username) = :username and user.recordStatus = :recordStatus "
                         + "and user.accountStatus = :accountStatus", User.class)
                 .setParameter("username", username.trim().toLowerCase())
@@ -106,4 +110,104 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
                 Long.class).setParameter("userId", userId).setParameter("roleName", roleName.trim()).getSingleResult();
         return matches > 0;
     }
-}
+
+    @Override
+    public User activateEmployeeAccount(Employee employee) {
+        if (employee == null || employee.getId() == null) {
+            throw new ServiceValidationException("A saved employee is required");
+        }
+
+        Employee managedEmployee = entityManager.find(Employee.class, employee.getId());
+        if (managedEmployee == null || managedEmployee.getRecordStatus() == RecordStatus.DELETED) {
+            throw new ServiceValidationException("Employee does not exist");
+        }
+
+        requireText(managedEmployee.getEmail(), "Employee email");
+        String username = managedEmployee.getEmail().trim().toLowerCase();
+
+        boolean accountExists = !entityManager.createQuery(
+                        "select user.id from User user where user.employee.id = :employeeId or lower(user.username) = :username",
+                        UUID.class)
+                .setParameter("employeeId", managedEmployee.getId())
+                .setParameter("username", username)
+                .setMaxResults(1)
+                .getResultList()
+                .isEmpty();
+        if (accountExists) {
+            throw new ServiceValidationException("An account already exists for this employee or email address");
+        }
+
+        Role employeeRole = entityManager.createQuery(
+                        "select role from Role role where role.name = :name and role.recordStatus = :recordStatus",
+                        Role.class)
+                .setParameter("name", RoleConstants.ROLE_EMPLOYEE)
+                .setParameter("recordStatus", RecordStatus.ACTIVE)
+                .getResultStream()
+                .findFirst()
+                .orElseThrow(() -> new ServiceValidationException("Employee role is not configured"));
+
+        User user = new User();
+        user.setUsername(username);
+        user.setEmail(username);
+        user.setDisplayName(managedEmployee.getFirstName() + " " + managedEmployee.getLastName());
+        user.setPasswordHash(PasswordUtil.hash(UserService.DEFAULT_EMPLOYEE_PASSWORD));
+        user.setAccountStatus(AccountStatus.ACTIVE);
+        user.setCompany(managedEmployee.getCompany());
+        user.setEmployee(managedEmployee);
+        user.getRoles().add(employeeRole);
+        entityManager.persist(user);
+        return user;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Set<UUID> getEmployeeIdsWithAccounts() {
+        return new LinkedHashSet<>(entityManager.createQuery(
+                        "select user.employee.id from User user where user.employee is not null "
+                                + "and user.recordStatus = :recordStatus",
+                        UUID.class)
+                .setParameter("recordStatus", RecordStatus.ACTIVE)
+                .getResultList());
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public boolean accountExists(String usernameOrEmail) {
+        if (usernameOrEmail == null || usernameOrEmail.trim().isEmpty()) {
+            return false;
+        }
+        String lookup = usernameOrEmail.trim().toLowerCase();
+        return entityManager.createQuery(
+                        "select count(user) from User user where lower(user.username) = :lookup "
+                                + "or lower(user.email) = :lookup", Long.class)
+                .setParameter("lookup", lookup)
+                .getSingleResult() > 0;
+    }
+
+    @Override
+    public void resetPassword(String usernameOrEmail, String newPassword) {
+        requireText(usernameOrEmail, "Username or email");
+        requireText(newPassword, "New password");
+        if (newPassword.length() < 8) {
+            throw new ServiceValidationException("Password must contain at least 8 characters");
+        }
+        String lookup = usernameOrEmail.trim().toLowerCase();
+        User user = entityManager.createQuery(
+                        "select user from User user where lower(user.username) = :lookup or lower(user.email) = :lookup",
+                        User.class)
+                .setParameter("lookup", lookup)
+                .getResultStream()
+                .findFirst()
+                .orElseThrow(() -> new ServiceValidationException("No account was found for that username or email"));
+        user.setPasswordHash(PasswordUtil.hash(newPassword));
+        entityManager.merge(user);
+    }
+
+    @Override
+    public User updateAccountStatus(User user, AccountStatus accountStatus) {
+        requirePresent(user, "User");
+        requirePresent(accountStatus, "Account status");
+        User managedUser = getInstanceById(user.getId())
+                .orElseThrow(() -> new ServiceValidationException("User account was not found"));
+        managedUser.setAccountStatus(accountStatus);
+        return entityManager.merge(managedUser);
+    }}

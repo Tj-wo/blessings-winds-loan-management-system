@@ -29,6 +29,9 @@ public final class PermissionConstants {
     @SystemPermission(name = "Delete Employee", description = "Allows a user to delete employee records")
     public static final String PERM_EMPLOYEE_DELETE = "EMPLOYEE_DELETE";
 
+    @SystemPermission(name = "Activate employee account", description = "Allows a user to activate an employee login account")
+    public static final String PERM_EMPLOYEE_ACCOUNT_ACTIVATE = "EMPLOYEE_ACCOUNT_ACTIVATE";
+
     @SystemPermission(name = "Create Document", description = "Allows a user to create document records")
     public static final String PERM_DOCUMENT_CREATE = "DOCUMENT_CREATE";
 

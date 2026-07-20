@@ -12,13 +12,13 @@
                 <h1>Portfolio command centre</h1>
                 <p>Applications, repayment performance, approvals and portfolio risk.</p>
             </div>
-            <h:link outcome="/pages/loan/LoanView" styleClass="ui-button ui-widget">
+            <h:link outcome="/pages/loan/LoanView" styleClass="app-button app-button-primary">
                 <i class="pi pi-list"/>Review queue</h:link>
         </div>
         <div class="metric-grid">
             <div class="metric-card">
                 <span>Active loans</span>
-                <strong>#{loanView.totalRecords}</strong>
+                <strong>#{loanView.activeLoanCount}</strong>
                 <small>Current portfolio</small>
             </div>
             <div class="metric-card">
