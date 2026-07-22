@@ -1,11 +1,10 @@
 <ui:composition
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:p="http://primefaces.org/ui"
-        xmlns:f="http://xmlns.jcp.org/jsf/core"
-
-        template="/pages/californiatemplate/template.xhtml">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    template="/pages/californiatemplate/template.xhtml">
     <ui:define name="title">SystemSetting | Blessed Winds Loans</ui:define>
     <ui:define name="content">
         <h:form id="form">
@@ -14,38 +13,59 @@
                     <h1>SystemSetting</h1>
                     <p>View and manage systemsetting records.</p>
                 </div>
-                <p:commandButton value="New SystemSetting" icon="pi pi-plus" rendered="#{componentRenderer.hasPermission('SYSTEM_SETTING_CREATE')}" action="#{systemSettingFormDialog.show}">
-                    <p:ajax event="dialogReturn" update="@form"/>
+                <p:commandButton
+                    value="New SystemSetting"
+                    icon="pi pi-plus"
+                    rendered="#{componentRenderer.hasPermission('SYSTEM_SETTING_CREATE')}"
+                    action="#{systemSettingFormDialog.show}">
+                    <p:ajax event="dialogReturn" listener="#{systemSettingView.reload}" update="@form" />
                 </p:commandButton>
             </div>
-            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:messages id="messages" showDetail="true" closable="true" />
             <div class="table-filters">
-                <i class="pi pi-search"/>
-                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_systemSetting').filter()"/>
+                <i class="pi pi-search" />
+                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_systemSetting').filter()" />
             </div>
-            <p:dataTable id="table" globalFilterOnly="true" widgetVar="table_systemSetting" value="#{systemSettingView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
+            <p:poll interval="20" listener="#{systemSettingView.reload}" update="table" />
+            <p:dataTable
+                id="table"
+                globalFilterOnly="true"
+                widgetVar="table_systemSetting"
+                value="#{systemSettingView.records}"
+                var="row"
+                paginator="true"
+                rows="25"
+                reflow="true"
+                emptyMessage="No records found"
+                styleClass="management-table">
                 <p:column headerText="Key">
-                    <h:outputText value="#{row.settingKey}"/>
+                    <h:outputText value="#{row.settingKey}" />
                 </p:column>
                 <p:column headerText="Value">
-                    <h:outputText value="#{row.settingValue}"/>
+                    <h:outputText value="#{row.settingValue}" />
                 </p:column>
                 <p:column headerText="Category">
-                    <h:outputText value="#{row.category}"/>
+                    <h:outputText value="#{row.category}" />
                 </p:column>
                 <p:column headerText="Type">
-                    <h:outputText value="#{row.valueType}"/>
+                    <h:outputText value="#{row.valueType}" />
                 </p:column>
                 <p:column headerText="Actions">
-                    <p:commandButton icon="pi pi-pencil"
-                                     title="Edit system setting"
-                                     rendered="#{componentRenderer.hasPermission('SYSTEM_SETTING_EDIT')}"
-                                     action="#{systemSettingFormDialog.edit(row)}"
-                                     styleClass="ui-button-outlined">
-                        <p:ajax event="dialogReturn" update="@form"/>
+                    <p:commandButton
+                        icon="pi pi-pencil"
+                        title="Edit system setting"
+                        rendered="#{componentRenderer.hasPermission('SYSTEM_SETTING_EDIT')}"
+                        action="#{systemSettingFormDialog.edit(row)}"
+                        styleClass="ui-button-outlined">
+                        <p:ajax event="dialogReturn" listener="#{systemSettingView.reload}" update="@form" />
                     </p:commandButton>
-
-                    <p:commandButton icon="pi pi-trash" rendered="#{componentRenderer.hasPermission('SYSTEM_SETTING_DELETE')}" title="Delete" styleClass="ui-button-danger ui-button-outlined" action="#{systemSettingView.delete(row)}" update="@form"/>
+                    <p:commandButton
+                        icon="pi pi-trash"
+                        rendered="#{componentRenderer.hasPermission('SYSTEM_SETTING_DELETE')}"
+                        title="Delete"
+                        styleClass="ui-button-danger ui-button-outlined"
+                        action="#{systemSettingView.delete(row)}"
+                        update="@form" />
                 </p:column>
             </p:dataTable>
         </h:form>

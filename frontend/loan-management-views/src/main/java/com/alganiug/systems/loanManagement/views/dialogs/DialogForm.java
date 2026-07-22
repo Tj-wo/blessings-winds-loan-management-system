@@ -86,7 +86,7 @@ public abstract class DialogForm<T extends BaseEntity> extends FormPresenter<T> 
                     new Object[]{model.getClass().getSimpleName(), model.getId()});
             hide();
         } catch (RuntimeException exception) {
-            String entityName = model == null ? "record" : model.getClass().getSimpleName();
+            String entityName = model == null ? "record" : humanize(model.getClass().getSimpleName());
             LOGGER.log(Level.SEVERE, "Failed to save " + entityName, exception);
             MessageComposer.error("Unable to save " + entityName, rootMessage(exception));
         }
@@ -100,16 +100,12 @@ public abstract class DialogForm<T extends BaseEntity> extends FormPresenter<T> 
         PrimeFaces.current().dialog().closeDynamic(null);
     }
 
-    private String rootMessage(Throwable throwable) {
-        Throwable rootCause = throwable;
-        while (rootCause.getCause() != null && rootCause.getCause() != rootCause) {
-            rootCause = rootCause.getCause();
-        }
+    private String humanize(String value) {
+        return value.replaceAll("([a-z])([A-Z])", "$1 $2").toLowerCase(java.util.Locale.ROOT);
+    }
 
-        String message = rootCause.getMessage();
-        return message == null || message.trim().isEmpty()
-                ? "The operation failed. Check the server log for details."
-                : message;
+    private String rootMessage(Throwable throwable) {
+        return UserMessageResolver.resolve(throwable);
     }
 
     @Override

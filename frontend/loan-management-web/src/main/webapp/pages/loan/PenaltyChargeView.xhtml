@@ -1,10 +1,9 @@
 <ui:composition
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:p="http://primefaces.org/ui"
-
-        template="/pages/californiatemplate/template.xhtml">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/pages/californiatemplate/template.xhtml">
     <ui:define name="title">PenaltyCharge | Blessed Winds Loans</ui:define>
     <ui:define name="content">
         <h:form id="form">
@@ -13,30 +12,51 @@
                     <h1>PenaltyCharge</h1>
                     <p>View and manage penaltycharge records.</p>
                 </div>
-                <p:commandButton value="New PenaltyCharge" icon="pi pi-plus" rendered="#{componentRenderer.hasPermission('PENALTY_CREATE')}" action="#{penaltyChargeFormDialog.show}">
-                    <p:ajax event="dialogReturn" update="@form"/>
+                <p:commandButton
+                    value="New PenaltyCharge"
+                    icon="pi pi-plus"
+                    rendered="#{componentRenderer.hasPermission('PENALTY_CREATE')}"
+                    action="#{penaltyChargeFormDialog.show}">
+                    <p:ajax event="dialogReturn" listener="#{penaltyChargeView.reload}" update="@form" />
                 </p:commandButton>
             </div>
-            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:messages id="messages" showDetail="true" closable="true" />
             <div class="table-filters">
-                <i class="pi pi-search"/>
-                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_penaltyCharge').filter()"/>
+                <i class="pi pi-search" />
+                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_penaltyCharge').filter()" />
             </div>
-            <p:dataTable id="table" globalFilterOnly="true" widgetVar="table_penaltyCharge" value="#{penaltyChargeView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
+            <p:poll interval="20" listener="#{penaltyChargeView.reload}" update="table" />
+            <p:dataTable
+                id="table"
+                globalFilterOnly="true"
+                widgetVar="table_penaltyCharge"
+                value="#{penaltyChargeView.records}"
+                var="row"
+                paginator="true"
+                rows="25"
+                reflow="true"
+                emptyMessage="No records found"
+                styleClass="management-table">
                 <p:column headerText="Reason">
-                    <h:outputText value="#{row.reason}"/>
+                    <h:outputText value="#{row.reason}" />
                 </p:column>
                 <p:column headerText="Amount">
-                    <h:outputText value="#{row.amount}"/>
+                    <h:outputText value="#{row.amount}" />
                 </p:column>
                 <p:column headerText="Assessed">
-                    <h:outputText value="#{row.assessedOn}"/>
+                    <h:outputText value="#{row.assessedOn}" />
                 </p:column>
                 <p:column headerText="Status">
-                    <h:outputText value="#{row.status}"/>
+                    <h:outputText value="#{row.status}" />
                 </p:column>
                 <p:column headerText="Actions">
-                    <p:commandButton icon="pi pi-trash" rendered="#{componentRenderer.hasPermission('PENALTY_DELETE')}" title="Delete" styleClass="ui-button-danger ui-button-outlined" action="#{penaltyChargeView.delete(row)}" update="@form"/>
+                    <p:commandButton
+                        icon="pi pi-trash"
+                        rendered="#{componentRenderer.hasPermission('PENALTY_DELETE')}"
+                        title="Delete"
+                        styleClass="ui-button-danger ui-button-outlined"
+                        action="#{penaltyChargeView.delete(row)}"
+                        update="@form" />
                 </p:column>
             </p:dataTable>
         </h:form>

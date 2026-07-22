@@ -1,11 +1,10 @@
 <ui:composition
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:p="http://primefaces.org/ui"
-        xmlns:f="http://xmlns.jcp.org/jsf/core"
-
-        template="/pages/californiatemplate/template.xhtml">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    template="/pages/californiatemplate/template.xhtml">
     <ui:define name="title">Employee | Blessed Winds Loans</ui:define>
     <ui:define name="content">
         <h:form id="form">
@@ -14,51 +13,64 @@
                     <h1>Employee</h1>
                     <p>View and manage employee records.</p>
                 </div>
-                <p:commandButton value="New Employee" icon="pi pi-plus" rendered="#{componentRenderer.hasPermission('EMPLOYEE_CREATE')}" action="#{employeeFormDialog.show}">
-                    <p:ajax event="dialogReturn" update="@form"/>
+                <p:commandButton
+                    value="New Employee"
+                    icon="pi pi-plus"
+                    rendered="#{componentRenderer.hasPermission('EMPLOYEE_CREATE')}"
+                    action="#{employeeFormDialog.show}">
+                    <p:ajax event="dialogReturn" listener="#{employeeView.reload}" update="@form" />
                 </p:commandButton>
             </div>
-            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:messages id="messages" showDetail="true" closable="true" />
             <div class="table-filters">
-                <i class="pi pi-search"/>
-                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_employee').filter()"/>
+                <i class="pi pi-search" />
+                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_employee').filter()" />
             </div>
-            <p:dataTable id="table" globalFilterOnly="true" widgetVar="table_employee" value="#{employeeView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
+            <p:poll interval="20" listener="#{employeeView.reload}" update="table" />
+            <p:dataTable
+                id="table"
+                globalFilterOnly="true"
+                widgetVar="table_employee"
+                value="#{employeeView.records}"
+                var="row"
+                paginator="true"
+                rows="25"
+                reflow="true"
+                emptyMessage="No records found"
+                styleClass="management-table">
                 <p:column headerText="Company">
-                    <h:outputText value="#{row.company.name}"/>
+                    <h:outputText value="#{row.company.name}" />
                 </p:column>
                 <p:column headerText="Employee no.">
-                    <h:outputText value="#{row.employeeNumber}"/>
+                    <h:outputText value="#{row.employeeNumber}" />
                 </p:column>
                 <p:column headerText="First name">
-                    <h:outputText value="#{row.firstName}"/>
+                    <h:outputText value="#{row.firstName}" />
                 </p:column>
                 <p:column headerText="Last name">
-                    <h:outputText value="#{row.lastName}"/>
+                    <h:outputText value="#{row.lastName}" />
                 </p:column>
                 <p:column headerText="KYC status">
-                    <h:outputText value="#{row.kycStatus}"/>
+                    <h:outputText value="#{row.kycStatus}" />
                 </p:column>
                 <p:column headerText="Actions">
                     <div class="table-actions">
-                        <p:commandButton icon="pi pi-pencil"
-                                         title="Edit employee"
-                                         rendered="#{componentRenderer.hasPermission('EMPLOYEE_EDIT')}"
-                                         action="#{employeeFormDialog.edit(row)}"
-                                         styleClass="ui-button-outlined">
-                            <p:ajax event="dialogReturn" update="@form"/>
+                        <p:commandButton
+                            icon="pi pi-pencil"
+                            title="Edit employee"
+                            rendered="#{componentRenderer.hasPermission('EMPLOYEE_EDIT')}"
+                            action="#{employeeFormDialog.edit(row)}"
+                            styleClass="ui-button-outlined">
+                            <p:ajax event="dialogReturn" listener="#{employeeView.reload}" update="@form" />
                         </p:commandButton>
-
-                        <p:commandButton icon="pi pi-user-plus"
-                                         value="Activate account"
-                                         title="Create login using the employee email"
-                                         rendered="#{componentRenderer.hasPermission('EMPLOYEE_ACCOUNT_ACTIVATE') and not employeeView.hasUserAccount(row)}"
-                                         action="#{employeeView.activateAccount(row)}"
-                                         update="@form"/>
-
-                        <p:tag value="Account active"
-                               severity="success"
-                               rendered="#{employeeView.hasUserAccount(row)}"/>
+                        <p:commandButton
+                            icon="pi pi-user-plus"
+                            value="Activate account"
+                            title="Create login using the employee email"
+                            rendered="#{componentRenderer.hasPermission('EMPLOYEE_ACCOUNT_ACTIVATE') and not employeeView.hasUserAccount(row)}"
+                            action="#{employeeView.activateAccount(row)}"
+                            update="@form" />
+                        <p:tag value="Account active" severity="success" rendered="#{employeeView.hasUserAccount(row)}" />
                     </div>
                 </p:column>
             </p:dataTable>

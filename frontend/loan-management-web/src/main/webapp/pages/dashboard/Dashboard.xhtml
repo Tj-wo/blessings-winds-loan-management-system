@@ -1,59 +1,221 @@
 <ui:composition
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:p="http://primefaces.org/ui"
-
-        template="/pages/californiatemplate/template.xhtml">
-    <ui:define name="title">Dashboard | Blessed Winds Loans</ui:define>
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">Portfolio command centre | Blessed Winds Loans</ui:define>
     <ui:define name="content">
-        <div class="page-header">
+        <!-- Dashboard Hero -->
+        <section class="dashboard-hero admin-hero">
             <div>
-                <h1>Portfolio command centre</h1>
-                <p>Applications, repayment performance, approvals and portfolio risk.</p>
+                <span class="eyebrow">Portfolio command centre</span>
+                <h1>A clear view of the lending operation</h1>
+                <p>Monitor capital at risk, approval flow, repayment activity and employer coverage.</p>
             </div>
-            <h:link outcome="/pages/loan/LoanView" styleClass="app-button app-button-primary">
-                <i class="pi pi-list"/>Review queue</h:link>
+            <div class="hero-balance">
+                <span>Portfolio outstanding</span>
+                <strong>UGX #{loanView.totalOutstandingAmount}</strong>
+                <small>Across funded loans</small>
+            </div>
+            <h:link outcome="/pages/loan/LoanView" styleClass="hero-action">
+                <i class="pi pi-arrow-right"></i>
+                <span>Review portfolio</span>
+            </h:link>
+        </section>
+        <!-- KPI Cards -->
+        <div class="dashboard-kpis">
+            <article class="kpi-card kpi-primary">
+                <div class="kpi-icon">
+                    <i class="pi pi-chart-line"></i>
+                </div>
+                <div>
+                    <span>Active portfolio</span>
+                    <strong>#{loanView.activeLoanCount}</strong>
+                    <small>Funded loans in repayment</small>
+                </div>
+            </article>
+            <article class="kpi-card kpi-warning">
+                <div class="kpi-icon">
+                    <i class="pi pi-hourglass"></i>
+                </div>
+                <div>
+                    <span>Approval pipeline</span>
+                    <strong>#{loanView.getStatusCount('SUBMITTED') + loanView.getStatusCount('HR_REVIEW') + loanView.getStatusCount('MANAGER_REVIEW') + loanView.getStatusCount('APPROVED')}</strong>
+                    <small>Not yet disbursed</small>
+                </div>
+            </article>
+            <article class="kpi-card kpi-danger">
+                <div class="kpi-icon">
+                    <i class="pi pi-exclamation-triangle"></i>
+                </div>
+                <div>
+                    <span>At-risk loans</span>
+                    <strong>#{loanView.getStatusCount('LATE') + loanView.getStatusCount('DEFAULTED')}</strong>
+                    <small>Late or defaulted</small>
+                </div>
+            </article>
+            <article class="kpi-card">
+                <div class="kpi-icon">
+                    <i class="pi pi-money-bill"></i>
+                </div>
+                <div>
+                    <span>Monthly collection</span>
+                    <strong>UGX #{loanView.monthlyRepaymentAmount}</strong>
+                    <small>Scheduled repayment value</small>
+                </div>
+            </article>
         </div>
-        <div class="metric-grid">
-            <div class="metric-card">
-                <span>Active loans</span>
-                <strong>#{loanView.activeLoanCount}</strong>
-                <small>Current portfolio</small>
-            </div>
-            <div class="metric-card">
-                <span>Employees</span>
-                <strong>#{employeeView.totalRecords}</strong>
-                <small>Registered borrowers</small>
-            </div>
-            <div class="metric-card">
-                <span>Companies</span>
-                <strong>#{companyView.totalRecords}</strong>
-                <small>Payroll partners</small>
-            </div>
-            <div class="metric-card">
-                <span>Repayments</span>
-                <strong>#{repaymentView.totalRecords}</strong>
-                <small>Posted deductions</small>
-            </div>
-        </div>
-        <div class="content-grid">
-            <p:panel header="Manager approval queue">
-                <p:dataTable value="#{loanView.records}" var="loan" rows="8">
-                    <p:column headerText="Reference">#{loan.loanReference}</p:column>
-                    <p:column headerText="Employee">#{loan.employee.firstName} #{loan.employee.lastName}</p:column>
-                    <p:column headerText="Requested">#{loan.requestedAmount}</p:column>
-                    <p:column headerText="Status">#{loan.status}</p:column>
-                </p:dataTable>
-            </p:panel>
-            <p:panel header="Recent notifications">
-                <ui:repeat value="#{notificationView.records}" var="notice">
-                    <div class="notification-item">
-                        <strong>#{notice.title}</strong>
-                        <span>#{notice.message}</span>
+        <!-- Portfolio Content -->
+        <div class="dashboard-layout admin-layout">
+            <!-- Main Portfolio Table -->
+            <section class="section-card dashboard-main-card">
+                <div class="section-heading">
+                    <div>
+                        <span class="section-kicker">Live portfolio</span>
+                        <h2>Recent applications and loans</h2>
+                        <p>Scan employer, amount and risk status at a glance.</p>
                     </div>
-                </ui:repeat>
-            </p:panel>
+                    <h:link outcome="/pages/loan/LoanView" value="View full portfolio" />
+                </div>
+                <p:dataTable value="#{loanView.records}" var="loan" rows="8" reflow="true" emptyMessage="No loans in the portfolio.">
+                    <p:column headerText="Borrower">
+                        <strong>#{loan.employee.firstName} #{loan.employee.lastName}</strong>
+                        <small class="table-subtitle">#{loan.company.name}</small>
+                    </p:column>
+                    <p:column headerText="Reference">
+                        <strong>#{loan.loanReference}</strong>
+                        <small class="table-subtitle">#{loan.product.name}</small>
+                    </p:column>
+                    <p:column headerText="Requested">UGX #{loan.requestedAmount}</p:column>
+                    <p:column headerText="Outstanding">
+                        <h:outputText
+                            value="UGX #{loan.outstandingBalance}"
+                            rendered="#{ loan.status eq 'DISBURSED' or loan.status eq 'ACTIVE' or loan.status eq 'LATE' or loan.status eq 'DEFAULTED' }" />
+                        <h:outputText
+                            value="—"
+                            rendered="#{ not ( loan.status eq 'DISBURSED' or loan.status eq 'ACTIVE' or loan.status eq 'LATE' or loan.status eq 'DEFAULTED' ) }" />
+                    </p:column>
+                    <p:column headerText="Status">
+                        <span class="status-pill status-#{loan.status}">#{loan.status}</span>
+                    </p:column>
+                </p:dataTable>
+            </section>
+            <!-- Dashboard Sidebar -->
+            <aside class="dashboard-side-stack">
+                <!-- Operating Footprint -->
+                <section class="section-card portfolio-summary">
+                    <span class="section-kicker">Network</span>
+                    <h2>Operating footprint</h2>
+                    <div class="summary-row">
+                        <span>
+                            <i class="pi pi-building"></i> Payroll partners</span>
+                        <strong>#{companyView.totalRecords}</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>
+                            <i class="pi pi-users"></i> Registered employees</span>
+                        <strong>#{employeeView.totalRecords}</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>
+                            <i class="pi pi-check-circle"></i> Repayments posted</span>
+                        <strong>#{repaymentView.totalRecords}</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>
+                            <i class="pi pi-file"></i> Total applications</span>
+                        <strong>#{loanView.totalRecords}</strong>
+                    </div>
+                </section>
+                <!-- Management Controls -->
+                <section class="section-card action-panel">
+                    <span class="section-kicker">Management</span>
+                    <h2>Quick controls</h2>
+                    <h:link outcome="/pages/loan/LoanApprovalView">
+                        <i class="pi pi-check-square"></i>
+                        <span>
+                            <strong>Approval queue</strong>
+                            <small>Review pending decisions</small>
+                        </span>
+                        <i class="pi pi-chevron-right"></i>
+                    </h:link>
+                    <h:link outcome="/pages/loan/DisbursementView">
+                        <i class="pi pi-send"></i>
+                        <span>
+                            <strong>Disbursements</strong>
+                            <small>Fund approved loans</small>
+                        </span>
+                        <i class="pi pi-chevron-right"></i>
+                    </h:link>
+                    <h:link outcome="/pages/reports/ReportsView">
+                        <i class="pi pi-chart-bar"></i>
+                        <span>
+                            <strong>Portfolio reports</strong>
+                            <small>Export management data</small>
+                        </span>
+                        <i class="pi pi-chevron-right"></i>
+                    </h:link>
+                </section>
+            </aside>
         </div>
+        <!-- Payment Reconciliation Queue -->
+        <section class="section-card admin-payment-queue">
+            <h:form id="paymentQueueForm">
+                <div class="section-heading">
+                    <div>
+                        <span class="section-kicker">Reconciliation</span>
+                        <h2>Payments awaiting confirmation</h2>
+                        <p>Supervisor-reported deductions that need administrator confirmation.</p>
+                    </div>
+                    <h:link outcome="/pages/payroll/PayrollDeductionView" value="Open reconciliation workspace" />
+                </div>
+                <p:messages showDetail="true" closable="true" />
+                <p:dataTable
+                    value="#{payrollDeductionView.repaidRecords}"
+                    var="deduction"
+                    rows="6"
+                    reflow="true"
+                    emptyMessage="No repaid deductions are awaiting confirmation.">
+                    <p:column headerText="Employee">
+                        <strong>#{deduction.employee.firstName} #{deduction.employee.lastName}</strong>
+                        <small class="table-subtitle">#{deduction.employee.employeeNumber}</small>
+                    </p:column>
+                    <p:column headerText="Loan">#{deduction.loan.loanReference}</p:column>
+                    <p:column headerText="Payroll batch">#{deduction.batch.batchReference}</p:column>
+                    <p:column headerText="Expected">UGX #{deduction.expectedAmount}</p:column>
+                    <p:column headerText="Reported paid">UGX #{deduction.deductedAmount}</p:column>
+                    <p:column headerText="Action">
+                        <p:commandButton
+                            icon="pi pi-verified"
+                            title="Confirm payment received"
+                            action="#{payrollDeductionView.confirmReceived(deduction)}"
+                            update="@form"
+                            styleClass="icon-action" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </section>
+        <!-- Recent Notifications -->
+        <section class="section-card notification-strip">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">Activity</span>
+                    <h2>Recent notifications</h2>
+                </div>
+                <h:link outcome="/pages/notification/NotificationView" value="View notifications" />
+            </div>
+            <div class="notification-grid">
+                <ui:repeat value="#{notificationView.records}" var="notice">
+                    <article>
+                        <i class="pi pi-bell"></i>
+                        <div>
+                            <strong>#{notice.title}</strong>
+                            <span>#{notice.message}</span>
+                        </div>
+                    </article>
+                </ui:repeat>
+            </div>
+        </section>
     </ui:define>
 </ui:composition>

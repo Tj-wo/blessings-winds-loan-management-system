@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.Arrays;
 
 @ManagedBean(name = "documentFormDialog")
 @ViewScoped
@@ -103,7 +104,9 @@ public class DocumentFormDialog extends DialogForm<Document> {
     }
 
     public DocumentType[] getDocumentTypes() {
-        return DocumentType.values();
+        return Arrays.stream(DocumentType.values())
+                .filter(type -> type != DocumentType.SIGNED_LOAN_AGREEMENT)
+                .toArray(DocumentType[]::new);
     }
 
     public List<Loan> getEmployeeLoans() {
@@ -128,6 +131,9 @@ public class DocumentFormDialog extends DialogForm<Document> {
         User user = authenticationController.getLoggedInUser();
         if (model.getEmployee() == null && user != null) {
             model.setEmployee(user.getEmployee());
+        }
+        if (model.getDocumentType() != DocumentType.SIGNED_LOAN_AGREEMENT) {
+            model.setLoan(null);
         }
         super.persist();
     }

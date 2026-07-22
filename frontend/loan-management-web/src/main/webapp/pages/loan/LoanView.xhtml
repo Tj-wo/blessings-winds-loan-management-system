@@ -1,13 +1,11 @@
-﻿<ui:composition
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:p="http://primefaces.org/ui"
-        xmlns:f="http://xmlns.jcp.org/jsf/core"
-        template="/pages/californiatemplate/template.xhtml">
-
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    template="/pages/californiatemplate/template.xhtml">
     <ui:define name="title">Loans | Blessed Winds Loans</ui:define>
-
     <ui:define name="content">
         <h:form id="form">
             <div class="page-header">
@@ -15,89 +13,82 @@
                     <h1>Loans</h1>
                     <p>View and manage loan records.</p>
                 </div>
-
-                <h:link outcome="/pages/loan/LoanApplication"
-                        value="Apply for a loan"
-                        rendered="#{componentRenderer.hasPermission('LOAN_CREATE')}"
-                        styleClass="app-button app-button-primary">
-                    <i class="pi pi-plus"/>
+                <h:link
+                    outcome="/pages/loan/LoanApplication"
+                    value="Apply for a loan"
+                    rendered="#{componentRenderer.hasPermission('LOAN_CREATE')}"
+                    styleClass="app-button app-button-primary">
+                    <i class="pi pi-plus" />
                 </h:link>
             </div>
-
-            <p:messages id="messages" showDetail="true" closable="true"/>
-
+            <p:messages id="messages" showDetail="true" closable="true" />
             <div class="table-filters">
-                <i class="pi pi-search"/>
-                <p:inputText id="globalFilter"
-                             placeholder="Search records"
-                             onkeyup="PF('table_loan').filter()"/>
+                <i class="pi pi-search" />
+                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_loan').filter()" />
             </div>
-
-            <p:dataTable id="table"
-                         value="#{loanView.records}"
-                         var="row"
-                         widgetVar="table_loan"
-                         globalFilterOnly="true"
-                         paginator="true"
-                         rows="25"
-                         reflow="true"
-                         emptyMessage="No records found"
-                         styleClass="management-table">
-
+            <p:poll interval="20" listener="#{loanView.reload}" update="table" />
+            <p:dataTable
+                id="table"
+                value="#{loanView.records}"
+                var="row"
+                widgetVar="table_loan"
+                globalFilterOnly="true"
+                paginator="true"
+                rows="25"
+                reflow="true"
+                emptyMessage="No records found"
+                styleClass="management-table">
                 <p:column headerText="Reference">
-                    <h:outputText value="#{row.loanReference}"/>
+                    <h:outputText value="#{row.loanReference}" />
                 </p:column>
-
                 <p:column headerText="Requested">
-                    <h:outputText value="#{row.requestedAmount}"/>
+                    <h:outputText value="#{row.requestedAmount}" />
                 </p:column>
-
                 <p:column headerText="Approved">
-                    <h:outputText value="#{row.approvedAmount}"/>
+                    <h:outputText value="#{row.approvedAmount}" />
                 </p:column>
-
                 <p:column headerText="Status">
-                    <h:outputText value="#{row.status}"/>
+                    <h:outputText value="#{row.status}" />
                 </p:column>
-
                 <p:column headerText="Actions">
                     <div class="table-actions">
-                        <h:link outcome="/pages/loan/LoanAgreement"
-                                title="View and print agreement"
-                                styleClass="app-button app-button-secondary icon-action">
-                            <f:param name="loan" value="#{row.id}"/>
-                            <i class="pi pi-print"/>
+                        <h:link
+                            outcome="/pages/loan/LoanAgreement"
+                            title="View and print agreement"
+                            styleClass="app-button app-button-secondary icon-action">
+                            <f:param name="loan" value="#{row.id}" />
+                            <i class="pi pi-print" />
                         </h:link>
-
-                        <p:commandButton icon="pi pi-pencil"
-                                         title="Edit draft loan"
-                                         rendered="#{row.status eq 'DRAFT' and componentRenderer.hasPermission('LOAN_EDIT')}"
-                                         action="#{loanFormDialog.edit(row)}"
-                                         styleClass="ui-button-outlined">
-                            <p:ajax event="dialogReturn" update="@form"/>
+                        <p:commandButton
+                            icon="pi pi-pencil"
+                            title="Edit draft loan"
+                            rendered="#{row.status eq 'DRAFT' and componentRenderer.hasPermission('LOAN_EDIT')}"
+                            action="#{loanFormDialog.edit(row)}"
+                            styleClass="ui-button-outlined">
+                            <p:ajax event="dialogReturn" listener="#{loanView.reload}" update="@form" />
                         </p:commandButton>
-
-                        <p:commandButton icon="pi pi-check-square"
-                                         title="Review loan application"
-                                         rendered="#{loanApprovalFormDialog.canReview(row) and componentRenderer.hasPermission('LOAN_APPROVAL_CREATE')}"
-                                         action="#{loanApprovalFormDialog.review(row)}"
-                                         styleClass="ui-button-info ui-button-outlined">
-                            <p:ajax event="dialogReturn" update="@form"/>
+                        <p:commandButton
+                            icon="pi pi-check-square"
+                            title="Review loan application"
+                            rendered="#{loanApprovalFormDialog.canReview(row) and componentRenderer.hasPermission('LOAN_APPROVAL_CREATE')}"
+                            action="#{loanApprovalFormDialog.review(row)}"
+                            styleClass="ui-button-info ui-button-outlined">
+                            <p:ajax event="dialogReturn" listener="#{loanView.reload}" update="@form" />
                         </p:commandButton>
-
-                        <p:commandButton icon="pi pi-send"
-                                         title="Disburse approved loan"
-                                         rendered="#{row.status eq 'APPROVED' and componentRenderer.hasPermission('LOAN_DISBURSE')}"
-                                         action="#{loanView.disburse(row)}"
-                                         update="@form"
-                                         styleClass="ui-button-success ui-button-outlined"/>
-
-                        <p:commandButton icon="pi pi-trash"
-                                         title="Delete loan"
-                                         rendered="#{componentRenderer.hasPermission('LOAN_DELETE')}"
-                                         action="#{loanView.delete(row)}"
-                                         update="@form"
-                                         styleClass="ui-button-danger ui-button-outlined"/>
+                        <p:commandButton
+                            icon="pi pi-send"
+                            title="Disburse approved loan"
+                            rendered="#{row.status eq 'APPROVED' and componentRenderer.hasPermission('LOAN_DISBURSE')}"
+                            action="#{loanView.disburse(row)}"
+                            update="@form"
+                            styleClass="ui-button-success ui-button-outlined" />
+                        <p:commandButton
+                            icon="pi pi-trash"
+                            title="Delete loan"
+                            rendered="#{componentRenderer.hasPermission('LOAN_DELETE')}"
+                            action="#{loanView.delete(row)}"
+                            update="@form"
+                            styleClass="ui-button-danger ui-button-outlined" />
                     </div>
                 </p:column>
             </p:dataTable>

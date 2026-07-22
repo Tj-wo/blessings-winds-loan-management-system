@@ -56,6 +56,16 @@ public class EmployeeView extends EntityView<Employee> {
         }
     }
 
+    public long getKycPendingCount() {
+        return getRecords().stream().filter(employee -> employee.getKycStatus()
+                == com.alganiug.systems.loanManagement.models.constants.KycStatus.PENDING_VERIFICATION
+                || employee.getKycStatus() == com.alganiug.systems.loanManagement.models.constants.KycStatus.REQUIRES_MORE_INFORMATION).count();
+    }
+
+    public long getKycApprovedCount() {
+        return getRecords().stream().filter(employee -> employee.getKycStatus()
+                == com.alganiug.systems.loanManagement.models.constants.KycStatus.APPROVED).count();
+    }
     public void activateAccount(Employee employee) {
         try {
             User user = userService.activateEmployeeAccount(employee);

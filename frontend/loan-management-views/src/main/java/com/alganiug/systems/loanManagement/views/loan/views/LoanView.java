@@ -51,6 +51,36 @@ public class LoanView extends EntityView<Loan> {
         setRecords(employeeLoans);
     }
 
+    public long getStatusCount(String... statuses) {
+        java.util.Set<String> accepted = new java.util.HashSet<>(java.util.Arrays.asList(statuses));
+        return getRecords().stream().filter(loan -> accepted.contains(loan.getStatus().name())).count();
+    }
+
+    public java.math.BigDecimal getTotalRequestedAmount() {
+        return getRecords().stream().map(Loan::getRequestedAmount).filter(java.util.Objects::nonNull)
+                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+    }
+
+    public java.math.BigDecimal getTotalOutstandingAmount() {
+        java.util.Set<com.alganiug.systems.loanManagement.models.constants.LoanStatus> disbursed =
+                java.util.EnumSet.of(com.alganiug.systems.loanManagement.models.constants.LoanStatus.DISBURSED,
+                        com.alganiug.systems.loanManagement.models.constants.LoanStatus.ACTIVE,
+                        com.alganiug.systems.loanManagement.models.constants.LoanStatus.LATE,
+                        com.alganiug.systems.loanManagement.models.constants.LoanStatus.DEFAULTED);
+        return getRecords().stream().filter(loan -> disbursed.contains(loan.getStatus()))
+                .map(Loan::getOutstandingBalance).filter(java.util.Objects::nonNull)
+                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+    }
+
+    public java.math.BigDecimal getMonthlyRepaymentAmount() {
+        return getRecords().stream()
+                .filter(loan -> loan.getStatus() == com.alganiug.systems.loanManagement.models.constants.LoanStatus.DISBURSED
+                        || loan.getStatus() == com.alganiug.systems.loanManagement.models.constants.LoanStatus.ACTIVE
+                        || loan.getStatus() == com.alganiug.systems.loanManagement.models.constants.LoanStatus.LATE
+                        || loan.getStatus() == com.alganiug.systems.loanManagement.models.constants.LoanStatus.DEFAULTED)
+                .map(Loan::getInstallmentAmount).filter(java.util.Objects::nonNull)
+                .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
+    }
     public long getActiveLoanCount() {
         User user = authenticationController == null ? null : authenticationController.getLoggedInUser();
         java.util.UUID companyId = user != null && user.getCompany() != null
