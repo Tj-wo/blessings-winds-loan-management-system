@@ -1,11 +1,10 @@
 <ui:composition
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:p="http://primefaces.org/ui"
-        xmlns:f="http://xmlns.jcp.org/jsf/core"
-
-        template="/pages/californiatemplate/template.xhtml">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    template="/pages/californiatemplate/template.xhtml">
     <ui:define name="title">Role | Blessed Winds Loans</ui:define>
     <ui:define name="content">
         <h:form id="form">
@@ -14,41 +13,57 @@
                     <h1>Role</h1>
                     <p>View and manage role records.</p>
                 </div>
-                <p:commandButton value="New Role" icon="pi pi-plus" rendered="#{componentRenderer.hasPermission('ROLE_CREATE')}" action="#{roleFormDialog.show}">
-                    <p:ajax event="dialogReturn" update="@form"/>
+                <p:commandButton
+                    value="New Role"
+                    icon="pi pi-plus"
+                    rendered="#{componentRenderer.hasPermission('ROLE_CREATE')}"
+                    action="#{roleFormDialog.show}">
+                    <p:ajax event="dialogReturn" listener="#{roleView.reload}" update="@form" />
                 </p:commandButton>
             </div>
-            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:messages id="messages" showDetail="true" closable="true" />
             <div class="table-filters">
-                <i class="pi pi-search"/>
-                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_role').filter()"/>
+                <i class="pi pi-search" />
+                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_role').filter()" />
             </div>
-            <p:dataTable id="table" globalFilterOnly="true" widgetVar="table_role" value="#{roleView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
+            <p:poll interval="20" listener="#{roleView.reload}" update="table" />
+            <p:dataTable
+                id="table"
+                globalFilterOnly="true"
+                widgetVar="table_role"
+                value="#{roleView.records}"
+                var="row"
+                paginator="true"
+                rows="25"
+                reflow="true"
+                emptyMessage="No records found"
+                styleClass="management-table">
                 <p:column headerText="Role">
-                    <h:outputText value="#{row.name}"/>
+                    <h:outputText value="#{row.name}" />
                 </p:column>
                 <p:column headerText="Description">
-                    <h:outputText value="#{row.description}"/>
+                    <h:outputText value="#{row.description}" />
                 </p:column>
                 <p:column headerText="Record status">
-                    <h:outputText value="#{row.recordStatus}"/>
+                    <h:outputText value="#{row.recordStatus}" />
                 </p:column>
                 <p:column headerText="Actions">
                     <div class="table-actions">
-                        <p:commandButton icon="pi pi-pencil"
-                                         value="Edit permissions"
-                                         rendered="#{componentRenderer.hasPermission('ROLE_EDIT')}"
-                                         action="#{roleFormDialog.edit(row)}"
-                                         styleClass="ui-button-outlined">
-                            <p:ajax event="dialogReturn" update="@form"/>
+                        <p:commandButton
+                            icon="pi pi-pencil"
+                            title="Edit permissions"
+                            rendered="#{componentRenderer.hasPermission('ROLE_EDIT')}"
+                            action="#{roleFormDialog.edit(row)}"
+                            styleClass="ui-button-outlined">
+                            <p:ajax event="dialogReturn" listener="#{roleView.reload}" update="@form" />
                         </p:commandButton>
-
-                        <p:commandButton icon="pi pi-trash"
-                                         title="Delete"
-                                         rendered="#{componentRenderer.hasPermission('ROLE_DELETE')}"
-                                         styleClass="ui-button-danger ui-button-outlined"
-                                         action="#{roleView.delete(row)}"
-                                         update="@form"/>
+                        <p:commandButton
+                            icon="pi pi-trash"
+                            title="Delete"
+                            rendered="#{componentRenderer.hasPermission('ROLE_DELETE')}"
+                            styleClass="ui-button-danger ui-button-outlined"
+                            action="#{roleView.delete(row)}"
+                            update="@form" />
                     </div>
                 </p:column>
             </p:dataTable>

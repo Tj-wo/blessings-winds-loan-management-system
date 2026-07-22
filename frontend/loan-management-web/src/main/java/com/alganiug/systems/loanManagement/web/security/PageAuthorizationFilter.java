@@ -76,6 +76,10 @@ public class PageAuthorizationFilter implements Filter {
             return employee;
         }
 
+        if (path.startsWith("/documents/content/")) {
+            return true;
+        }
+
         if (employee) {
             return isEmployeePage(path);
         }
@@ -113,7 +117,7 @@ public class PageAuthorizationFilter implements Filter {
             return permissions.contains("EMPLOYEE_VIEW") || permissions.contains("DOCUMENT_VIEW");
         }
         if (path.startsWith("/pages/payroll/")) {
-            return hrSupervisor && hasAny(permissions, "PAYROLL_BATCH_VIEW", "PAYROLL_DEDUCTION_VIEW");
+            return (hrSupervisor || administrator) && hasAny(permissions, "PAYROLL_BATCH_VIEW", "PAYROLL_DEDUCTION_VIEW");
         }
         if (path.startsWith("/pages/loan/")) {
             return (administrator || loanManager || hrSupervisor) && permissions.contains("LOAN_VIEW");
@@ -142,6 +146,7 @@ public class PageAuthorizationFilter implements Filter {
         if (path.contains("LoanProductForm")) return hasAny(permissions, "LOAN_PRODUCT_CREATE", "LOAN_PRODUCT_EDIT");
         if (path.contains("LoanApprovalForm")) return permissions.contains("LOAN_APPROVAL_CREATE");
         if (path.contains("PayrollDeductionBatchForm")) return permissions.contains("PAYROLL_BATCH_CREATE");
+        if (path.contains("PayrollDeductionForm")) return hasAny(permissions, "PAYROLL_DEDUCTION_CREATE", "PAYROLL_DEDUCTION_EDIT");
         if (path.contains("NotificationForm")) return permissions.contains("NOTIFICATION_CREATE");
         if (path.contains("SystemSettingForm")) return hasAny(permissions, "SYSTEM_SETTING_CREATE", "SYSTEM_SETTING_EDIT");
         return false;

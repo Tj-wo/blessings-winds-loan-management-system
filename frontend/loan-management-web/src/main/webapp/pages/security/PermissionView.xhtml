@@ -1,10 +1,9 @@
 <ui:composition
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:p="http://primefaces.org/ui"
-
-        template="/pages/californiatemplate/template.xhtml">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/pages/californiatemplate/template.xhtml">
     <ui:define name="title">Permission | Blessed Winds Loans</ui:define>
     <ui:define name="content">
         <h:form id="form">
@@ -14,26 +13,36 @@
                     <p>View and manage permission records.</p>
                 </div>
             </div>
-            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:messages id="messages" showDetail="true" closable="true" />
             <div class="table-filters">
-                <i class="pi pi-search"/>
-                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_permission').filter()"/>
+                <i class="pi pi-search" />
+                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_permission').filter()" />
             </div>
-            <p:dataTable id="table" globalFilterOnly="true" widgetVar="table_permission" value="#{permissionView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
+            <p:poll interval="20" listener="#{permissionView.reload}" update="table" />
+            <p:dataTable
+                id="table"
+                globalFilterOnly="true"
+                widgetVar="table_permission"
+                value="#{permissionView.records}"
+                var="row"
+                paginator="true"
+                rows="25"
+                reflow="true"
+                emptyMessage="No records found"
+                styleClass="management-table">
                 <p:column headerText="Code">
-                    <h:outputText value="#{row.code}"/>
+                    <h:outputText value="#{row.code}" />
                 </p:column>
                 <p:column headerText="Permission">
-                    <h:outputText value="#{row.name}"/>
+                    <h:outputText value="#{row.name}" />
                 </p:column>
                 <p:column headerText="Description">
-                    <h:outputText value="#{row.description}"/>
+                    <h:outputText value="#{row.description}" />
                 </p:column>
                 <p:column headerText="Status">
-                    <h:outputText value="#{row.recordStatus}"/>
+                    <h:outputText value="#{row.recordStatus}" />
                 </p:column>
-                <p:column headerText="Actions">
-                </p:column>
+                <p:column headerText="Actions"></p:column>
             </p:dataTable>
         </h:form>
     </ui:define>

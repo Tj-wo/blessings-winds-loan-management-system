@@ -1,18 +1,15 @@
 <ui:composition
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:f="http://xmlns.jcp.org/jsf/core"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:p="http://primefaces.org/ui"
-        template="/pages/californiatemplate/template.xhtml">
-
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/pages/californiatemplate/template.xhtml">
     <f:metadata>
-        <f:viewParam name="loan" value="#{loanAgreementView.loanId}"/>
-        <f:viewAction action="#{loanAgreementView.load}"/>
+        <f:viewParam name="loan" value="#{loanAgreementView.loanId}" />
+        <f:viewAction action="#{loanAgreementView.load}" />
     </f:metadata>
-
     <ui:define name="title">Loan agreement | Blessed Winds Loans</ui:define>
-
     <ui:define name="content">
         <h:panelGroup rendered="#{not empty loanAgreementView.loan}">
             <article class="document-card loan-agreement">
@@ -23,52 +20,79 @@
                         <p>Blessed Winds Loans</p>
                     </div>
                 </header>
-
-                <p>This agreement is made between <strong>Blessed Winds Loans</strong> and
-                    <strong>#{loanAgreementView.loan.employee.firstName} #{loanAgreementView.loan.employee.lastName}</strong>,
-                    employee number <strong>#{loanAgreementView.loan.employee.employeeNumber}</strong> of
-                    <strong>#{loanAgreementView.loan.company.name}</strong>.</p>
-
-                <div class="agreement-reference">
-                    Application reference: <strong>#{loanAgreementView.loan.loanReference}</strong>
-                </div>
-
+                <p>This agreement is made between<strong>Blessed Winds Loans</strong> and<strong>#{loanAgreementView.loan.employee.firstName} #{loanAgreementView.loan.employee.lastName}</strong> , employee number<strong>#{loanAgreementView.loan.employee.employeeNumber}</strong> of<strong>#{loanAgreementView.loan.company.name}</strong> .</p>
+                <div class="agreement-reference">Application reference:<strong>#{loanAgreementView.loan.loanReference}</strong></div>
                 <h2>Agreed loan terms</h2>
                 <div class="agreement-terms">
-                    <div><span>Principal</span><strong>UGX #{empty loanAgreementView.loan.approvedAmount ? loanAgreementView.loan.requestedAmount : loanAgreementView.loan.approvedAmount}</strong></div>
-                    <div><span>Interest</span><strong>UGX #{loanAgreementView.loan.interestAmount}</strong></div>
-                    <div><span>Total payable</span><strong>UGX #{loanAgreementView.loan.totalPayable}</strong></div>
-                    <div><span>Monthly deduction</span><strong>UGX #{loanAgreementView.loan.installmentAmount}</strong></div>
-                    <div><span>Term</span><strong>#{empty loanAgreementView.loan.approvedTermMonths ? loanAgreementView.loan.requestedTermMonths : loanAgreementView.loan.approvedTermMonths} months</strong></div>
-                    <div><span>Status</span><strong>#{loanAgreementView.loan.status}</strong></div>
+                    <div>
+                        <span>Principal</span>
+                        <strong>UGX #{empty loanAgreementView.loan.approvedAmount ? loanAgreementView.loan.requestedAmount : loanAgreementView.loan.approvedAmount}</strong>
+                    </div>
+                    <div>
+                        <span>Interest</span>
+                        <strong>UGX #{loanAgreementView.loan.interestAmount}</strong>
+                    </div>
+                    <div>
+                        <span>Total payable</span>
+                        <strong>UGX #{loanAgreementView.loan.totalPayable}</strong>
+                    </div>
+                    <div>
+                        <span>Monthly deduction</span>
+                        <strong>UGX #{loanAgreementView.loan.installmentAmount}</strong>
+                    </div>
+                    <div>
+                        <span>Term</span>
+                        <strong>#{empty loanAgreementView.loan.approvedTermMonths ? loanAgreementView.loan.requestedTermMonths : loanAgreementView.loan.approvedTermMonths} months</strong>
+                    </div>
+                    <div>
+                        <span>Status</span>
+                        <strong>#{loanAgreementView.loan.status}</strong>
+                    </div>
                 </div>
-
                 <h2>Payroll deduction authority</h2>
-                <p>The borrower authorizes the employer to deduct the agreed monthly installment from salary and
-                    remit it toward this loan until the outstanding balance is cleared. Any approved change to the
-                    amount or term must be reflected in a replacement agreement before final approval.</p>
-
+                <p>The borrower authorizes the employer to deduct the agreed monthly installment from salary and remit it toward this loan until the outstanding balance is cleared. Any approved change to the amount or term must be reflected in a replacement agreement before final approval.</p>
                 <div class="signature-grid">
                     <div>Borrower signature and date</div>
                     <div>HR/Supervisor signature and date</div>
                     <div>Authorized loan officer and date</div>
                 </div>
-
+                <section class="agreement-attachments">
+                    <h2>Attached KYC documents</h2>
+                    <ui:repeat value="#{loanAgreementView.attachedKycDocuments}" var="document">
+                        <article class="agreement-attachment">
+                            <h3>#{document.documentType}</h3>
+                            <h:graphicImage
+                                value="#{request.contextPath}/documents/content/#{document.id}"
+                                rendered="#{loanAgreementView.isImage(document)}" />
+                            <object
+                                data="#{request.contextPath}/documents/content/#{document.id}"
+                                type="application/pdf"
+                                rendered="#{loanAgreementView.isPdf(document)}">
+                                <p>PDF attachment: #{document.originalFilename}</p>
+                            </object>
+                        </article>
+                    </ui:repeat>
+                </section>
                 <h:form id="agreementActions" styleClass="agreement-actions no-print">
-                    <p:button value="Back to applications" icon="pi pi-arrow-left"
-                              outcome="/pages/loan/LoanView" styleClass="ui-button-outlined"/>
-                    <p:commandButton value="Print agreement" icon="pi pi-print"
-                                     type="button" onclick="window.print()"/>
-                    <p:commandButton value="Upload signed agreement" icon="pi pi-upload"
-                                     action="#{documentFormDialog.uploadSignedAgreement(loanAgreementView.loan)}">
-                        <p:ajax event="dialogReturn" update="agreementActions"/>
+                    <p:button
+                        value="Back to applications"
+                        icon="pi pi-arrow-left"
+                        outcome="/pages/loan/LoanView"
+                        styleClass="ui-button-outlined" />
+                    <p:commandButton value="Print agreement" icon="pi pi-print" type="button" onclick="window.print()" />
+                    <p:commandButton
+                        value="Upload signed agreement"
+                        icon="pi pi-upload"
+                        action="#{documentFormDialog.uploadSignedAgreement(loanAgreementView.loan)}">
+                        <p:ajax event="dialogReturn" update="agreementActions" />
                     </p:commandButton>
                 </h:form>
             </article>
         </h:panelGroup>
-
-        <p:message severity="error" summary="Agreement unavailable"
-                   detail="Select a valid loan application before opening the agreement."
-                   rendered="#{empty loanAgreementView.loan}"/>
+        <p:message
+            severity="error"
+            summary="Agreement unavailable"
+            detail="Select a valid loan application before opening the agreement."
+            rendered="#{empty loanAgreementView.loan}" />
     </ui:define>
 </ui:composition>

@@ -1,10 +1,9 @@
 <ui:composition
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:p="http://primefaces.org/ui"
-
-        template="/pages/californiatemplate/template.xhtml">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/pages/californiatemplate/template.xhtml">
     <ui:define name="title">Loan details</ui:define>
     <ui:define name="content">
         <div class="page-header">
@@ -19,15 +18,22 @@
                     <p:column headerText="Reference">#{loan.loanReference}</p:column>
                     <p:column headerText="Requested">#{loan.requestedAmount}</p:column>
                     <p:column headerText="Approved">#{loan.approvedAmount}</p:column>
-                    <p:column headerText="Balance">#{loan.outstandingBalance}</p:column>
+                    <p:column headerText="Balance">
+                        <h:outputText
+                            value="#{loan.outstandingBalance}"
+                            rendered="#{loan.status eq 'DISBURSED' or loan.status eq 'ACTIVE' or loan.status eq 'DEFAULTED' or loan.status eq 'COMPLETED'}" />
+                        <h:outputText
+                            value="—"
+                            rendered="#{not (loan.status eq 'DISBURSED' or loan.status eq 'ACTIVE' or loan.status eq 'DEFAULTED' or loan.status eq 'COMPLETED')}" />
+                    </p:column>
                     <p:column headerText="Status">#{loan.status}</p:column>
                 </p:dataTable>
             </p:tab>
             <p:tab title="Schedule">
-                <ui:include src="RepaymentScheduleItemView.xhtml"/>
+                <ui:include src="RepaymentScheduleItemView.xhtml" />
             </p:tab>
             <p:tab title="Approvals">
-                <ui:include src="LoanApprovalView.xhtml"/>
+                <ui:include src="LoanApprovalView.xhtml" />
             </p:tab>
         </p:tabView>
     </ui:define>

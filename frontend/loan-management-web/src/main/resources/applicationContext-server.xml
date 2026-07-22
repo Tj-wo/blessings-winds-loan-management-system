@@ -17,7 +17,12 @@
         <property name="password" value="" />
     </bean>
 
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <bean id="databasePacketConfiguration" class="com.alganiug.systems.loanManagement.core.services.impl.DatabasePacketConfiguration" init-method="initialize">
+        <property name="dataSource" ref="dataSource" />
+        <property name="maximumPacketBytes" value="16777216" />
+    </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="databasePacketConfiguration">
         <property name="dataSource" ref="dataSource" />
         <property name="packagesToScan" value="com.alganiug.systems.loanManagement.models" />
         <property name="jpaVendorAdapter">

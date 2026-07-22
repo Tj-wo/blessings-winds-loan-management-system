@@ -1,38 +1,142 @@
 <ui:composition
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:p="http://primefaces.org/ui"
-
-        template="/pages/californiatemplate/template.xhtml">
-    <ui:define name="title">Payroll dashboard</ui:define>
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/pages/californiatemplate/template.xhtml">
+    <ui:define name="title">Supervisor workspace | Blessed Winds Loans</ui:define>
     <ui:define name="content">
-        <div class="page-header">
+        <section class="dashboard-hero supervisor-hero">
             <div>
-                <h1>Payroll desk</h1>
-                <p>Employee KYC, loan approvals and deduction reconciliation.</p>
+                <span class="eyebrow">Supervisor workspace</span>
+                <h1>Keep approvals and payroll moving</h1>
+                <p>Focus on employees waiting for KYC review, loan decisions, and payroll reconciliation.</p>
             </div>
-            <h:link outcome="/pages/payroll/PayrollDeductionBatchView" styleClass="app-button app-button-primary">Upload deductions</h:link>
+            <div class="hero-actions">
+                <h:link outcome="/pages/loan/LoanApprovalView" styleClass="hero-action">
+                    <i class="pi pi-check-square" /> Review queue</h:link>
+                <h:link outcome="/pages/payroll/PayrollDeductionView" styleClass="hero-action hero-action-muted">
+                    <i class="pi pi-plus" /> Add deduction</h:link>
+            </div>
+        </section>
+        <div class="dashboard-kpis">
+            <article class="kpi-card kpi-warning">
+                <div class="kpi-icon">
+                    <i class="pi pi-id-card" />
+                </div>
+                <div>
+                    <span>KYC needs review</span>
+                    <strong>#{employeeView.kycPendingCount}</strong>
+                    <small>Employees awaiting verification</small>
+                </div>
+            </article>
+            <article class="kpi-card kpi-primary">
+                <div class="kpi-icon">
+                    <i class="pi pi-inbox" />
+                </div>
+                <div>
+                    <span>Loan review workload</span>
+                    <strong>#{loanView.getStatusCount('SUBMITTED') + loanView.getStatusCount('HR_REVIEW') + loanView.getStatusCount('KYC_APPROVED')}</strong>
+                    <small>Requires supervisor attention</small>
+                </div>
+            </article>
+            <article class="kpi-card">
+                <div class="kpi-icon">
+                    <i class="pi pi-credit-card" />
+                </div>
+                <div>
+                    <span>Active company loans</span>
+                    <strong>#{loanView.activeLoanCount}</strong>
+                    <small>In payroll repayment</small>
+                </div>
+            </article>
+            <article class="kpi-card">
+                <div class="kpi-icon">
+                    <i class="pi pi-upload" />
+                </div>
+                <div>
+                    <span>Payroll batches</span>
+                    <strong>#{payrollDeductionBatchView.totalRecords}</strong>
+                    <small>Uploaded for reconciliation</small>
+                </div>
+            </article>
         </div>
-        <div class="metric-grid">
-            <div class="metric-card">
-                <span>Employees</span>
-                <strong>#{employeeView.totalRecords}</strong>
-            </div>
-            <div class="metric-card">
-                <span>Pending loans</span>
-                <strong>#{loanApprovalView.totalRecords}</strong>
-            </div>
-            <div class="metric-card">
-                <span>Payroll batches</span>
-                <strong>#{payrollDeductionBatchView.totalRecords}</strong>
-            </div>
+        <div class="dashboard-layout">
+            <section class="section-card dashboard-main-card">
+                <div class="section-heading">
+                    <div>
+                        <span class="section-kicker">Attention queue</span>
+                        <h2>Recent employee applications</h2>
+                        <p>Prioritise KYC-approved and supervisor-review loans.</p>
+                    </div>
+                    <h:link outcome="/pages/loan/LoanView" value="Open all loans" />
+                </div>
+                <p:dataTable value="#{loanView.records}" var="loan" rows="7" reflow="true" emptyMessage="No employee applications.">
+                    <p:column headerText="Employee">
+                        <strong>#{loan.employee.firstName} #{loan.employee.lastName}</strong>
+                        <small class="table-subtitle">#{loan.employee.employeeNumber}</small>
+                    </p:column>
+                    <p:column headerText="Application">
+                        <strong>#{loan.loanReference}</strong>
+                        <small class="table-subtitle">#{loan.purpose}</small>
+                    </p:column>
+                    <p:column headerText="Requested">UGX #{loan.requestedAmount}</p:column>
+                    <p:column headerText="Term">#{loan.requestedTermMonths} months</p:column>
+                    <p:column headerText="Status">
+                        <span class="status-pill status-#{loan.status}">#{loan.status}</span>
+                    </p:column>
+                </p:dataTable>
+            </section>
+            <aside class="dashboard-side-stack">
+                <section class="section-card action-panel">
+                    <span class="section-kicker">Operations</span>
+                    <h2>Supervisor tools</h2>
+                    <h:link outcome="/pages/employee/DocumentView">
+                        <i class="pi pi-eye" />
+                        <span>
+                            <strong>Verify KYC</strong>
+                            <small>#{employeeView.kycPendingCount} employees waiting</small>
+                        </span>
+                        <i class="pi pi-chevron-right" />
+                    </h:link>
+                    <h:link outcome="/pages/loan/LoanApprovalView">
+                        <i class="pi pi-check-square" />
+                        <span>
+                            <strong>Review loans</strong>
+                            <small>Approve or return applications</small>
+                        </span>
+                        <i class="pi pi-chevron-right" />
+                    </h:link>
+                    <h:link outcome="/pages/payroll/PayrollDeductionBatchView">
+                        <i class="pi pi-upload" />
+                        <span>
+                            <strong>Payroll batches</strong>
+                            <small>Upload and reconcile</small>
+                        </span>
+                        <i class="pi pi-chevron-right" />
+                    </h:link>
+                    <h:link outcome="/pages/payroll/PayrollDeductionView">
+                        <i class="pi pi-money-bill" />
+                        <span>
+                            <strong>Deductions</strong>
+                            <small>Add individual deductions</small>
+                        </span>
+                        <i class="pi pi-chevron-right" />
+                    </h:link>
+                </section>
+                <section class="section-card progress-panel">
+                    <span class="section-kicker">KYC coverage</span>
+                    <div class="progress-stat">
+                        <strong>#{employeeView.kycApprovedCount}</strong>
+                        <span>approved employees</span>
+                    </div>
+                    <div class="progress-track">
+                        <span
+                            style="width:#{employeeView.totalRecords gt 0 ? (employeeView.kycApprovedCount * 100 / employeeView.totalRecords) : 0}%" />
+                    </div>
+                    <small>Out of #{employeeView.totalRecords} registered employees</small>
+                </section>
+            </aside>
         </div>
-        <p:dataTable value="#{loanView.records}" var="loan">
-            <p:column headerText="Reference">#{loan.loanReference}</p:column>
-            <p:column headerText="Employee">#{loan.employee.firstName} #{loan.employee.lastName}</p:column>
-            <p:column headerText="Amount">#{loan.requestedAmount}</p:column>
-            <p:column headerText="Status">#{loan.status}</p:column>
-        </p:dataTable>
     </ui:define>
 </ui:composition>

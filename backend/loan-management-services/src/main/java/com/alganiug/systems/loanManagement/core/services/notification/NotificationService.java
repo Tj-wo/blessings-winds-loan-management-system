@@ -7,4 +7,7 @@ import java.util.UUID;
 
 public interface NotificationService extends GenericService<Notification> {
     List<Notification> getForUser(UUID userId, UUID companyId);
+    long countUnreadForUser(UUID userId, UUID companyId);
+    void markAsRead(UUID notificationId, UUID userId, UUID companyId);
+    int markAllAsRead(UUID userId, UUID companyId);
 }

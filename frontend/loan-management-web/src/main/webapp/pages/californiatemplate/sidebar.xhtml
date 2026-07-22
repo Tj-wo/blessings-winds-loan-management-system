@@ -1,7 +1,7 @@
 <ui:composition
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <aside class="layout-sidebar">
         <div class="sidebar-brand">
             <span class="brand-mark">BW</span>
@@ -12,86 +12,92 @@
         </div>
         <nav class="sidebar-menu">
             <h:link outcome="#{authenticationController.dashboard}">
-                <i class="pi pi-home"/>
+                <i class="pi pi-home" />
                 <span>Dashboard</span>
             </h:link>
             <h:link outcome="/pages/security/ProfileView" rendered="#{componentRenderer.hasRole('Employee')}">
-                <i class="pi pi-user"/>
+                <i class="pi pi-user" />
                 <span>My profile</span>
             </h:link>
             <div class="menu-caption">Lending</div>
             <h:link outcome="/pages/loan/LoanView" rendered="#{componentRenderer.hasViewLoanPerm}">
-                <i class="pi pi-credit-card"/>
+                <i class="pi pi-credit-card" />
                 <span>Loans</span>
             </h:link>
             <h:link outcome="/pages/loan/LoanApprovalView" rendered="#{componentRenderer.hasViewLoanApprovalPerm}">
-                <i class="pi pi-check-square"/>
+                <i class="pi pi-check-square" />
                 <span>Approvals</span>
             </h:link>
             <h:link outcome="/pages/loan/LoanProductView" rendered="#{componentRenderer.hasViewLoanProductPerm}">
-                <i class="pi pi-sliders-h"/>
+                <i class="pi pi-sliders-h" />
                 <span>Loan products</span>
             </h:link>
             <h:link outcome="/pages/loan/DisbursementView" rendered="#{componentRenderer.hasViewDisbursementPerm}">
-                <i class="pi pi-send"/>
+                <i class="pi pi-send" />
                 <span>Disbursements</span>
             </h:link>
             <h:link outcome="/pages/loan/RepaymentView" rendered="#{componentRenderer.hasViewRepaymentPerm}">
-                <i class="pi pi-money-bill"/>
+                <i class="pi pi-money-bill" />
                 <span>Repayments</span>
             </h:link>
             <h:link outcome="/pages/loan/PenaltyChargeView" rendered="#{componentRenderer.hasViewPenaltyPerm}">
-                <i class="pi pi-exclamation-triangle"/>
+                <i class="pi pi-exclamation-triangle" />
                 <span>Penalties</span>
             </h:link>
             <div class="menu-caption">People and payroll</div>
             <h:link outcome="/pages/company/CompanyView" rendered="#{componentRenderer.hasViewCompanyPerm}">
-                <i class="pi pi-building"/>
+                <i class="pi pi-building" />
                 <span>Companies</span>
             </h:link>
-            <h:link outcome="/pages/employee/EmployeeView" rendered="#{componentRenderer.hasViewEmployeePerm and not componentRenderer.hasRole('Employee')}">
-                <i class="pi pi-users"/>
+            <h:link
+                outcome="/pages/employee/EmployeeView"
+                rendered="#{componentRenderer.hasViewEmployeePerm and not componentRenderer.hasRole('Employee')}">
+                <i class="pi pi-users" />
                 <span>Employees</span>
             </h:link>
             <h:link outcome="/pages/employee/DocumentView" rendered="#{componentRenderer.hasViewDocumentPerm}">
-                <i class="pi pi-id-card"/>
+                <i class="pi pi-id-card" />
                 <span>Upload KYC</span>
             </h:link>
-            <h:link outcome="/pages/payroll/PayrollDeductionBatchView" rendered="#{componentRenderer.hasViewPayrollBatchPerm}">
-                <i class="pi pi-upload"/>
+            <h:link
+                outcome="/pages/payroll/PayrollDeductionBatchView"
+                rendered="#{componentRenderer.hasRole('HR Supervisor') and componentRenderer.hasViewPayrollBatchPerm}">
+                <i class="pi pi-upload" />
                 <span>Payroll batches</span>
             </h:link>
-            <h:link outcome="/pages/payroll/PayrollDeductionView" rendered="#{componentRenderer.hasViewPayrollDeductionPerm}">
-                <i class="pi pi-list"/>
+            <h:link
+                outcome="/pages/payroll/PayrollDeductionView"
+                rendered="#{componentRenderer.hasRole('HR Supervisor') and componentRenderer.hasViewPayrollDeductionPerm}">
+                <i class="pi pi-list" />
                 <span>Deductions</span>
             </h:link>
             <div class="menu-caption">Administration</div>
             <h:link outcome="/pages/security/UserView" rendered="#{componentRenderer.hasViewUserPerm}">
-                <i class="pi pi-user"/>
+                <i class="pi pi-user" />
                 <span>Users</span>
             </h:link>
             <h:link outcome="/pages/security/RoleView" rendered="#{componentRenderer.hasViewRolePerm}">
-                <i class="pi pi-shield"/>
+                <i class="pi pi-shield" />
                 <span>Roles</span>
             </h:link>
             <h:link outcome="/pages/security/PermissionView" rendered="#{componentRenderer.hasViewPermissionPerm}">
-                <i class="pi pi-key"/>
+                <i class="pi pi-key" />
                 <span>Permissions</span>
             </h:link>
             <h:link outcome="/pages/notification/NotificationView" rendered="#{componentRenderer.hasViewNotificationPerm}">
-                <i class="pi pi-bell"/>
+                <i class="pi pi-bell" />
                 <span>Notifications</span>
             </h:link>
             <h:link outcome="/pages/reports/ReportsView" rendered="#{componentRenderer.hasExportReportPerm}">
-                <i class="pi pi-chart-bar"/>
+                <i class="pi pi-chart-bar" />
                 <span>Reports</span>
             </h:link>
             <h:link outcome="/pages/settings/SystemSettingView" rendered="#{componentRenderer.hasViewSystemSettingPerm}">
-                <i class="pi pi-cog"/>
+                <i class="pi pi-cog" />
                 <span>Settings</span>
             </h:link>
             <h:link outcome="/pages/audit/AuditLogView" rendered="#{componentRenderer.hasViewAuditLogPerm}">
-                <i class="pi pi-history"/>
+                <i class="pi pi-history" />
                 <span>Audit trail</span>
             </h:link>
         </nav>

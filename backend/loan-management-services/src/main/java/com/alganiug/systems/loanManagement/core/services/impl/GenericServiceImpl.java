@@ -96,9 +96,8 @@ public abstract class GenericServiceImpl<T extends BaseEntity> implements Generi
         }
 
         T managedEntity = entityManager.contains(entityInstance) ? entityInstance : entityManager.merge(entityInstance);
-        managedEntity.setRecordStatus(RecordStatus.DELETED);
-        entityManager.merge(managedEntity);
         recordAudit("DELETE", managedEntity);
+        entityManager.remove(managedEntity);
     }
 
     protected void recordAudit(String action, BaseEntity entity) {

@@ -32,6 +32,15 @@
     </listener>
 
     <servlet>
+        <servlet-name>Document Preview</servlet-name>
+        <servlet-class>com.alganiug.systems.loanManagement.web.DocumentPreviewServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Document Preview</servlet-name>
+        <url-pattern>/documents/content/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>

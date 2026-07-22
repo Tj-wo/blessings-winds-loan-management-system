@@ -1,10 +1,9 @@
 <ui:composition
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        xmlns:p="http://primefaces.org/ui"
-
-        template="/pages/californiatemplate/template.xhtml">
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    template="/pages/californiatemplate/template.xhtml">
     <ui:define name="title">AuditLog | Blessed Winds Loans</ui:define>
     <ui:define name="content">
         <h:form id="form">
@@ -14,26 +13,36 @@
                     <p>View and manage auditlog records.</p>
                 </div>
             </div>
-            <p:messages id="messages" showDetail="true" closable="true"/>
+            <p:messages id="messages" showDetail="true" closable="true" />
             <div class="table-filters">
-                <i class="pi pi-search"/>
-                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_auditLog').filter()"/>
+                <i class="pi pi-search" />
+                <p:inputText id="globalFilter" placeholder="Search records" onkeyup="PF('table_auditLog').filter()" />
             </div>
-            <p:dataTable id="table" globalFilterOnly="true" widgetVar="table_auditLog" value="#{auditLogView.records}" var="row" paginator="true" rows="25" reflow="true" emptyMessage="No records found" styleClass="management-table">
+            <p:poll interval="20" listener="#{auditLogView.reload}" update="table" />
+            <p:dataTable
+                id="table"
+                globalFilterOnly="true"
+                widgetVar="table_auditLog"
+                value="#{auditLogView.records}"
+                var="row"
+                paginator="true"
+                rows="25"
+                reflow="true"
+                emptyMessage="No records found"
+                styleClass="management-table">
                 <p:column headerText="Time">
-                    <h:outputText value="#{row.eventTime}"/>
+                    <h:outputText value="#{row.eventTime}" />
                 </p:column>
                 <p:column headerText="Actor">
-                    <h:outputText value="#{row.actor.username}"/>
+                    <h:outputText value="#{row.actor.username}" />
                 </p:column>
                 <p:column headerText="Action">
-                    <h:outputText value="#{row.action}"/>
+                    <h:outputText value="#{row.action}" />
                 </p:column>
                 <p:column headerText="Entity">
-                    <h:outputText value="#{row.entityType}"/>
+                    <h:outputText value="#{row.entityType}" />
                 </p:column>
-                <p:column headerText="Actions">
-                </p:column>
+                <p:column headerText="Actions"></p:column>
             </p:dataTable>
         </h:form>
     </ui:define>

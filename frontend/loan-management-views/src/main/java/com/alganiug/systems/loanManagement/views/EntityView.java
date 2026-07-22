@@ -2,6 +2,8 @@ package com.alganiug.systems.loanManagement.views;
 
 import com.alganiug.systems.loanManagement.core.services.GenericService;
 import com.alganiug.systems.loanManagement.models.base.BaseEntity;
+import com.alganiug.systems.loanManagement.views.dialogs.MessageComposer;
+import com.alganiug.systems.loanManagement.views.dialogs.UserMessageResolver;
 
 import javax.annotation.PostConstruct;
 import java.io.Serializable;
@@ -30,8 +32,13 @@ public abstract class EntityView<T extends BaseEntity> implements Serializable {
     }
 
     public void delete(T record) {
-        getService().deleteInstance(record);
-        reload();
+        try {
+            getService().deleteInstance(record);
+            MessageComposer.info("Record deleted", "The record was deleted successfully.");
+            reload();
+        } catch (RuntimeException exception) {
+            MessageComposer.error("Unable to delete record", UserMessageResolver.resolve(exception));
+        }
     }
 
     protected void setRecords(List<T> records) {

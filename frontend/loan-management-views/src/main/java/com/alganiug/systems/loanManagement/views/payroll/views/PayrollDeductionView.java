@@ -5,6 +5,12 @@ import com.alganiug.systems.loanManagement.models.payroll.PayrollDeduction;
 import com.alganiug.systems.loanManagement.views.EntityView;
 import com.alganiug.systems.loanManagement.views.controllers.AuthenticationController;
 import com.alganiug.systems.loanManagement.models.security.User;
+import com.alganiug.systems.loanManagement.views.dialogs.MessageComposer;
+import com.alganiug.systems.loanManagement.views.dialogs.UserMessageResolver;
+import com.alganiug.systems.loanManagement.models.security.RoleConstants;
+import com.alganiug.systems.loanManagement.models.constants.DeductionStatus;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -30,6 +36,10 @@ public class PayrollDeductionView extends EntityView<PayrollDeduction> {
     @Override
     public void reload() {
         User user = authenticationController == null ? null : authenticationController.getLoggedInUser();
+        if (user != null && hasRole(user, RoleConstants.ROLE_ADMINISTRATOR)) {
+            setRecords(service.getAllWithDetails());
+            return;
+        }
         if (user != null && user.getCompany() != null) {
             setRecords(service.getForCompany(user.getCompany().getId()));
             return;
@@ -37,6 +47,34 @@ public class PayrollDeductionView extends EntityView<PayrollDeduction> {
         super.reload();
     }
 
+    public List<PayrollDeduction> getRepaidRecords() {
+        return getRecords().stream().filter(deduction -> deduction.getStatus() == DeductionStatus.REPAID)
+                .collect(Collectors.toList());
+    }
+
+    private boolean hasRole(User user, String roleName) {
+        return user.getRoles().stream().anyMatch(role -> roleName.equals(role.getName()));
+    }
+
+    public void markRepaid(PayrollDeduction deduction) {
+        try {
+            service.markRepaid(deduction, authenticationController.getLoggedInUser());
+            MessageComposer.info("Deduction marked repaid", "The administrator can now confirm receipt.");
+            reload();
+        } catch (RuntimeException exception) {
+            MessageComposer.error("Unable to mark deduction repaid", UserMessageResolver.resolve(exception));
+        }
+    }
+
+    public void confirmReceived(PayrollDeduction deduction) {
+        try {
+            service.confirmReceived(deduction, authenticationController.getLoggedInUser());
+            MessageComposer.info("Payment received", "The repayment was posted and the loan balance updated.");
+            reload();
+        } catch (RuntimeException exception) {
+            MessageComposer.error("Unable to confirm receipt", UserMessageResolver.resolve(exception));
+        }
+    }
     public void setAuthenticationController(AuthenticationController authenticationController) {
         this.authenticationController = authenticationController;
     }
