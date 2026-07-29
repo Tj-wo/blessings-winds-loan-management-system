@@ -38,16 +38,16 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Reference">
+                <p:column headerText="Reference" filterBy="#{row.loanReference}" filterMatchMode="contains">
                     <h:outputText value="#{row.loanReference}" />
                 </p:column>
-                <p:column headerText="Requested">
+                <p:column headerText="Requested" filterBy="#{row.requestedAmount}" filterMatchMode="contains">
                     <h:outputText value="#{row.requestedAmount}" />
                 </p:column>
-                <p:column headerText="Approved">
+                <p:column headerText="Approved" filterBy="#{row.approvedAmount}" filterMatchMode="contains">
                     <h:outputText value="#{row.approvedAmount}" />
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" filterBy="#{row.status}" filterMatchMode="contains">
                     <h:outputText value="#{row.status}" />
                 </p:column>
                 <p:column headerText="Actions">
@@ -62,7 +62,7 @@
                         <p:commandButton
                             icon="pi pi-pencil"
                             title="Edit draft loan"
-                            rendered="#{row.status eq 'DRAFT' and componentRenderer.hasPermission('LOAN_EDIT')}"
+                            rendered="#{(row.status eq 'DRAFT' or row.status eq 'CHANGES_REQUESTED') and componentRenderer.hasPermission('LOAN_EDIT')}"
                             action="#{loanFormDialog.edit(row)}"
                             styleClass="ui-button-outlined">
                             <p:ajax event="dialogReturn" listener="#{loanView.reload}" update="@form" />

@@ -38,16 +38,16 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Username">
+                <p:column headerText="Username" filterBy="#{row.username}" filterMatchMode="contains">
                     <h:outputText value="#{row.username}" />
                 </p:column>
-                <p:column headerText="Display name">
+                <p:column headerText="Display name" filterBy="#{row.displayName}" filterMatchMode="contains">
                     <h:outputText value="#{row.displayName}" />
                 </p:column>
-                <p:column headerText="Email">
+                <p:column headerText="Email" filterBy="#{row.email}" filterMatchMode="contains">
                     <h:outputText value="#{row.email}" />
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" filterBy="#{row.accountStatus}" filterMatchMode="contains">
                     <h:outputText value="#{row.accountStatus}" />
                 </p:column>
                 <p:column headerText="Actions">

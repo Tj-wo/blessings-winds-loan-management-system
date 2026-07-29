@@ -75,19 +75,19 @@
                     </div>
                     <h:link outcome="/pages/loan/LoanView" value="See all loans" />
                 </div>
-                <p:dataTable value="#{loanView.records}" var="loan" rows="6" reflow="true" emptyMessage="No loan applications yet.">
-                    <p:column headerText="Loan">
+                <p:dataTable globalFilterOnly="true" value="#{loanView.records}" var="loan" rows="6" reflow="true" emptyMessage="No loan applications yet.">
+                    <p:column headerText="Loan" filterBy="#{loan.loanReference}" filterMatchMode="contains">
                         <strong>#{loan.loanReference}</strong>
                         <small class="table-subtitle">#{loan.purpose}</small>
                     </p:column>
-                    <p:column headerText="Amount">
+                    <p:column headerText="Amount" filterBy="#{loan.requestedAmount}" filterMatchMode="contains">
                         <strong>UGX #{loan.requestedAmount}</strong>
                         <small class="table-subtitle">#{loan.requestedTermMonths} months</small>
                     </p:column>
-                    <p:column headerText="Monthly">
+                    <p:column headerText="Monthly" filterBy="#{loan.installmentAmount}" filterMatchMode="contains">
                         <h:outputText value="UGX #{loan.installmentAmount}" />
                     </p:column>
-                    <p:column headerText="Balance">
+                    <p:column headerText="Balance" filterBy="#{loan.outstandingBalance}" filterMatchMode="contains">
                         <h:outputText
                             value="UGX #{loan.outstandingBalance}"
                             rendered="#{loan.status eq 'DISBURSED' or loan.status eq 'ACTIVE' or loan.status eq 'LATE' or loan.status eq 'DEFAULTED'}" />
@@ -95,10 +95,10 @@
                             value="—"
                             rendered="#{not (loan.status eq 'DISBURSED' or loan.status eq 'ACTIVE' or loan.status eq 'LATE' or loan.status eq 'DEFAULTED')}" />
                     </p:column>
-                    <p:column headerText="Status">
+                    <p:column headerText="Status" filterBy="#{loan.status}" filterMatchMode="contains">
                         <span class="status-pill status-#{loan.status}">#{loan.status}</span>
                     </p:column>
-                    <p:column headerText="Action">
+                    <p:column headerText="Action" filterBy="#{loan.id}" filterMatchMode="contains">
                         <h:link outcome="/pages/loan/LoanAgreement" value="Agreement" rendered="#{loan.status ne 'DRAFT'}">
                             <f:param name="loan" value="#{loan.id}" />
                         </h:link>

@@ -35,6 +35,11 @@ public class PageAuthorizationFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         String path = requestPath(httpRequest);
 
+        if (isLandingPage(path)) {
+            httpResponse.sendRedirect(httpRequest.getContextPath() + "/pages/external/login.xhtml");
+            return;
+        }
+
         if (isPublic(path)) {
             chain.doFilter(request, response);
             return;
@@ -54,7 +59,19 @@ public class PageAuthorizationFilter implements Filter {
             return;
         }
 
-        chain.doFilter(request, response);
+        AuditContext.set(user.getId(), clientIp(httpRequest));
+        try {
+            chain.doFilter(request, response);
+        } finally {
+            AuditContext.clear();
+        }
+    }
+
+    private String clientIp(HttpServletRequest request) {
+        String forwarded = request.getHeader("X-Forwarded-For");
+        return forwarded == null || forwarded.trim().isEmpty()
+                ? request.getRemoteAddr()
+                : forwarded.split(",", 2)[0].trim();
     }
 
     private boolean isAuthorized(User user, String path) {
@@ -161,13 +178,16 @@ public class PageAuthorizationFilter implements Filter {
     }
 
     private boolean isPublic(String path) {
-        return path.isEmpty()
-                || path.equals("/")
-                || path.equals("/index.xhtml")
-                || path.startsWith("/javax.faces.resource/")
+        return path.startsWith("/javax.faces.resource/")
                 || path.startsWith("/resources/")
                 || path.startsWith("/pages/external/")
                 || path.startsWith("/pages/error/");
+    }
+
+    private boolean isLandingPage(String path) {
+        return path.isEmpty()
+                || path.equals("/")
+                || path.equals("/index.xhtml");
     }
 
     private String requestPath(HttpServletRequest request) {

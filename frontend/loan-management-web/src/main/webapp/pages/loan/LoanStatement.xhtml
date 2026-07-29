@@ -15,11 +15,11 @@
             </div>
             <p:commandButton value="Print" icon="pi pi-print" type="button" onclick="window.print()"/>
         </div>
-        <p:dataTable value="#{repaymentView.records}" var="payment">
-            <p:column headerText="Date">#{payment.paymentDate}</p:column>
-            <p:column headerText="Reference">#{payment.paymentReference}</p:column>
-            <p:column headerText="Amount">#{payment.amount}</p:column>
-            <p:column headerText="Status">#{payment.status}</p:column>
+                <p:dataTable globalFilterOnly="true" value="#{repaymentView.records}" var="payment">
+            <p:column headerText="Date" filterBy="#{payment.paymentDate}" filterMatchMode="contains">#{payment.paymentDate}</p:column>
+            <p:column headerText="Reference" filterBy="#{payment.paymentReference}" filterMatchMode="contains">#{payment.paymentReference}</p:column>
+            <p:column headerText="Amount" filterBy="#{payment.amount}" filterMatchMode="contains">#{payment.amount}</p:column>
+            <p:column headerText="Status" filterBy="#{payment.status}" filterMatchMode="contains">#{payment.status}</p:column>
         </p:dataTable>
         </h:form>
     </ui:define>

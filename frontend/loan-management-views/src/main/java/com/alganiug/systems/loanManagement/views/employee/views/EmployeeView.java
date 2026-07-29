@@ -71,8 +71,7 @@ public class EmployeeView extends EntityView<Employee> {
             User user = userService.activateEmployeeAccount(employee);
             employeeIdsWithAccounts.add(employee.getId());
             MessageComposer.info("Account activated",
-                    "Username: " + user.getUsername() + ". Default password: "
-                            + UserService.DEFAULT_EMPLOYEE_PASSWORD);
+                    "Login details were emailed to " + user.getEmail() + ".");
         } catch (RuntimeException exception) {
             LOGGER.log(Level.SEVERE, "Failed to activate employee account", exception);
             MessageComposer.error("Account activation failed", exception.getMessage());

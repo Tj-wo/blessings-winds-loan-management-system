@@ -15,7 +15,7 @@
                 <p:commandButton
                     value="Add deduction"
                     icon="pi pi-plus"
-                    rendered="#{componentRenderer.hasRole('HR Supervisor') and componentRenderer.hasPermission('PAYROLL_DEDUCTION_CREATE')}"
+                    rendered="#{componentRenderer.hasRole('Administrator') and componentRenderer.hasPermission('PAYROLL_DEDUCTION_CREATE')}"
                     action="#{payrollDeductionFormDialog.show}">
                     <p:ajax event="dialogReturn" listener="#{payrollDeductionView.reload}" update="@form" />
                 </p:commandButton>
@@ -37,22 +37,22 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Employee">
+                <p:column headerText="Employee" filterBy="#{row.employee.firstName}" filterMatchMode="contains">
                     <h:outputText value="#{row.employee.firstName} #{row.employee.lastName}" />
                 </p:column>
-                <p:column headerText="Loan">
+                <p:column headerText="Loan" filterBy="#{row.loan.loanReference}" filterMatchMode="contains">
                     <h:outputText value="#{row.loan.loanReference}" />
                 </p:column>
-                <p:column headerText="Expected">
+                <p:column headerText="Expected" filterBy="#{row.expectedAmount}" filterMatchMode="contains">
                     <h:outputText value="#{row.expectedAmount}" />
                 </p:column>
-                <p:column headerText="Deducted">
+                <p:column headerText="Deducted" filterBy="#{row.deductedAmount}" filterMatchMode="contains">
                     <h:outputText value="#{row.deductedAmount}" />
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" filterBy="#{row.status}" filterMatchMode="contains">
                     <h:outputText value="#{row.status}" />
                 </p:column>
-                <p:column headerText="Comment">
+                <p:column headerText="Comment" filterBy="#{row.reconciliationComment}" filterMatchMode="contains">
                     <h:outputText value="#{row.reconciliationComment}" />
                 </p:column>
                 <p:column headerText="Actions">
@@ -60,7 +60,7 @@
                         <p:commandButton
                             icon="pi pi-check"
                             title="Mark as repaid"
-                            rendered="#{componentRenderer.hasRole('HR Supervisor') and (row.status eq 'PENDING' or row.status eq 'PARTIAL' or row.status eq 'UNMATCHED')}"
+                            rendered="#{componentRenderer.hasRole('Administrator') and (row.status eq 'PENDING' or row.status eq 'PARTIAL' or row.status eq 'UNMATCHED')}"
                             action="#{payrollDeductionView.markRepaid(row)}"
                             update="@form"
                             styleClass="ui-button-success icon-action" />

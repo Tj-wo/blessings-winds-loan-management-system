@@ -30,16 +30,16 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Time">
+                <p:column headerText="Time" filterBy="#{row.eventTime}" filterMatchMode="contains">
                     <h:outputText value="#{row.eventTime}" />
                 </p:column>
-                <p:column headerText="Actor">
+                <p:column headerText="Actor" filterBy="#{row.actor.username}" filterMatchMode="contains">
                     <h:outputText value="#{row.actor.username}" />
                 </p:column>
-                <p:column headerText="Action">
+                <p:column headerText="Action" filterBy="#{row.action}" filterMatchMode="contains">
                     <h:outputText value="#{row.action}" />
                 </p:column>
-                <p:column headerText="Entity">
+                <p:column headerText="Entity" filterBy="#{row.entityType}" filterMatchMode="contains">
                     <h:outputText value="#{row.entityType}" />
                 </p:column>
                 <p:column headerText="Actions"></p:column>

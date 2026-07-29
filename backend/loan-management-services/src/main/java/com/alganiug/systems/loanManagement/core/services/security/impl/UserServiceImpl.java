@@ -3,6 +3,8 @@ package com.alganiug.systems.loanManagement.core.services.security.impl;
 import com.alganiug.systems.loanManagement.core.services.impl.GenericServiceImpl;
 import com.alganiug.systems.loanManagement.core.services.ServiceValidationException;
 import com.alganiug.systems.loanManagement.core.services.security.UserService;
+import com.alganiug.systems.loanManagement.core.services.notification.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.alganiug.systems.loanManagement.models.security.User;
 import com.alganiug.systems.loanManagement.models.security.Role;
 import com.alganiug.systems.loanManagement.models.security.RoleConstants;
@@ -17,9 +19,16 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.security.SecureRandom;
 
 @Service
 public class UserServiceImpl extends GenericServiceImpl<User> implements UserService {
+
+    private static final String PASSWORD_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
+    private final SecureRandom secureRandom = new SecureRandom();
+
+    @Autowired
+    private EmailService emailService;
 
 
     public UserServiceImpl() {
@@ -117,11 +126,18 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
             throw new ServiceValidationException("A saved employee is required");
         }
 
+        if (!actorHasPermission("EMPLOYEE_ACCOUNT_ACTIVATE")) {
+            throw new ServiceValidationException("You are not allowed to activate employee accounts");
+        }
         Employee managedEmployee = entityManager.find(Employee.class, employee.getId());
         if (managedEmployee == null || managedEmployee.getRecordStatus() == RecordStatus.DELETED) {
             throw new ServiceValidationException("Employee does not exist");
         }
 
+        UUID actorCompanyId = actorCompanyId();
+        if (actorCompanyId != null && !actorCompanyId.equals(managedEmployee.getCompany().getId())) {
+            throw new ServiceValidationException("You cannot activate an employee outside your company");
+        }
         requireText(managedEmployee.getEmail(), "Employee email");
         String username = managedEmployee.getEmail().trim().toLowerCase();
 
@@ -150,7 +166,8 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
         user.setUsername(username);
         user.setEmail(username);
         user.setDisplayName(managedEmployee.getFirstName() + " " + managedEmployee.getLastName());
-        user.setPasswordHash(PasswordUtil.hash(UserService.DEFAULT_EMPLOYEE_PASSWORD));
+        String temporaryPassword = temporaryPassword();
+        user.setPasswordHash(PasswordUtil.hash(temporaryPassword));
         user.setAccountStatus(AccountStatus.ACTIVE);
         user.setCompany(managedEmployee.getCompany());
         user.setEmployee(managedEmployee);
@@ -184,23 +201,65 @@ public class UserServiceImpl extends GenericServiceImpl<User> implements UserSer
     }
 
     @Override
-    public void resetPassword(String usernameOrEmail, String newPassword) {
-        requireText(usernameOrEmail, "Username or email");
-        requireText(newPassword, "New password");
-        if (newPassword.length() < 8) {
-            throw new ServiceValidationException("Password must contain at least 8 characters");
+    public void requestPasswordResetOtp(String email) {
+        requireText(email, "Email address");
+        String lookup = email.trim().toLowerCase();
+        Optional<User> match = entityManager.createQuery("select user from User user where lower(user.email) = :lookup", User.class)
+                .setParameter("lookup", lookup).getResultStream().findFirst();
+        if (!match.isPresent()) return;
+        User user = match.get();
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+        if (user.getPasswordResetOtpHash() != null && user.getPasswordResetOtpExpiresAt() != null
+                && user.getPasswordResetOtpExpiresAt().isAfter(now.plusMinutes(9))) {
+            throw new ServiceValidationException("Please wait one minute before requesting another verification code");
         }
-        String lookup = usernameOrEmail.trim().toLowerCase();
-        User user = entityManager.createQuery(
-                        "select user from User user where lower(user.username) = :lookup or lower(user.email) = :lookup",
-                        User.class)
-                .setParameter("lookup", lookup)
-                .getResultStream()
-                .findFirst()
-                .orElseThrow(() -> new ServiceValidationException("No account was found for that username or email"));
+        String otp = String.format("%06d", secureRandom.nextInt(1_000_000));
+        user.setPasswordResetOtpHash(PasswordUtil.hash("OTP:" + otp));
+        user.setPasswordResetOtpExpiresAt(java.time.LocalDateTime.now().plusMinutes(10));
+        user.setPasswordResetOtpAttempts(0);
+        entityManager.merge(user);
+        emailService.send(user.getEmail(), "Your Blessed Winds Loans verification code",
+                "Your password reset verification code is: " + otp
+                        + "\n\nThis code expires in 10 minutes. Do not share it with anyone.");
+    }
+
+    @Override
+    public void resetPasswordWithOtp(String email, String otp, String newPassword) {
+        requireText(email, "Email address");
+        requireText(otp, "Verification code");
+        requireText(newPassword, "New password");
+        if (newPassword.length() < 8) throw new ServiceValidationException("Password must contain at least 8 characters");
+        User user = entityManager.createQuery("select user from User user where lower(user.email) = :lookup", User.class)
+                .setParameter("lookup", email.trim().toLowerCase()).getResultStream().findFirst()
+                .orElseThrow(() -> new ServiceValidationException("The verification code is invalid or expired"));
+        if (user.getPasswordResetOtpHash() == null || user.getPasswordResetOtpExpiresAt() == null
+                || user.getPasswordResetOtpExpiresAt().isBefore(java.time.LocalDateTime.now())
+                || user.getPasswordResetOtpAttempts() >= 5) {
+            clearPasswordResetOtp(user);
+            throw new ServiceValidationException("The verification code is invalid or expired. Request a new code.");
+        }
+        if (!PasswordUtil.matches("OTP:" + otp.trim(), user.getPasswordResetOtpHash())) {
+            user.setPasswordResetOtpAttempts(user.getPasswordResetOtpAttempts() + 1);
+            entityManager.merge(user);
+            throw new ServiceValidationException("The verification code is invalid or expired");
+        }
         user.setPasswordHash(PasswordUtil.hash(newPassword));
+        clearPasswordResetOtp(user);
         entityManager.merge(user);
     }
+
+    private void clearPasswordResetOtp(User user) {
+        user.setPasswordResetOtpHash(null);
+        user.setPasswordResetOtpExpiresAt(null);
+        user.setPasswordResetOtpAttempts(0);
+    }
+
+    private String temporaryPassword() {
+        StringBuilder password = new StringBuilder(14);
+        for (int i = 0; i < 14; i++) password.append(PASSWORD_CHARS.charAt(secureRandom.nextInt(PASSWORD_CHARS.length())));
+        return password.toString();
+    }
+
 
     @Override
     public User updateAccountStatus(User user, AccountStatus accountStatus) {

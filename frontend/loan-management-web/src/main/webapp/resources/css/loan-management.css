@@ -133,3 +133,34 @@ body.dialog-page {
 .notification-summary{margin:.25rem 0 .8rem;color:var(--muted);font-size:.85rem}.notification-summary strong{color:var(--ink)}
 .notification-title{display:flex;align-items:flex-start;gap:.65rem;min-width:260px}.notification-title>div{display:flex;flex-direction:column;gap:.25rem}.notification-title small{color:var(--muted);white-space:normal;line-height:1.4}.notification-unread-dot{flex:0 0 8px;width:8px;height:8px;margin-top:.4rem;border-radius:50%;background:var(--brand);box-shadow:0 0 0 3px #dbeafe}
 .management-table .document-actions-column{width:150px;min-width:150px}.management-table .document-actions-column .table-actions{display:flex!important;align-items:center!important;justify-content:flex-start!important;flex-flow:row nowrap!important;width:max-content}.management-table .document-actions-column .ui-button{margin:0!important}
+
+/* Responsive navigation and mobile layout */
+.mobile-menu-toggle,.sidebar-backdrop{display:none}
+@media(max-width:900px){
+    body.mobile-menu-open{overflow:hidden}
+    .layout-topbar{height:64px;padding:0 .75rem;gap:.65rem}
+    .mobile-menu-toggle{display:inline-grid;place-items:center;flex:0 0 42px;width:42px;height:42px;padding:0;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-size:1.15rem;cursor:pointer}
+    .layout-sidebar{display:block;transform:translateX(-100%);width:min(300px,86vw);transition:transform .22s ease;box-shadow:12px 0 32px rgba(16,24,40,.22);z-index:40}
+    body.mobile-menu-open .layout-sidebar{transform:translateX(0)}
+    .sidebar-backdrop{position:fixed;inset:0;z-index:35;border:0;background:rgba(16,24,40,.52);cursor:pointer}
+    body.mobile-menu-open .sidebar-backdrop{display:block}
+    .layout-main{padding:82px .85rem 40px;overflow-x:hidden}
+    .layout-footer{position:static;margin-left:0;padding:.8rem 1rem;gap:.5rem;flex-direction:column;text-align:center}
+    .page-header{align-items:stretch;flex-direction:column}
+    .page-header>a,.page-header>.ui-button{width:100%;justify-content:center}
+    .table-filters{max-width:none;width:100%;margin:0 0 1rem}
+    .management-table{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .topbar-actions{gap:.6rem;margin-left:auto}
+    .topbar-actions>a:not(.notification-link){display:none}
+    .mobile-brand strong{font-size:.9rem;white-space:nowrap}
+    .sidebar-menu a{min-height:46px;padding:.8rem}
+}
+@media(max-width:420px){
+    .mobile-brand .brand-mark{display:none}
+    .mobile-brand strong{font-size:.82rem}
+    .layout-main{padding-left:.65rem;padding-right:.65rem}
+    .dashboard-hero,.employee-hero{padding:1.25rem}
+    .section-card,.metric-card,.kpi-card{padding:1rem}
+    .dialog-actions{align-items:stretch;flex-direction:column-reverse}
+    .dialog-actions .ui-button{width:100%}
+}

@@ -38,19 +38,19 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Company">
+                <p:column headerText="Company" filterBy="#{row.company.name}" filterMatchMode="contains">
                     <h:outputText value="#{row.company.name}" />
                 </p:column>
-                <p:column headerText="Employee no.">
+                <p:column headerText="Employee no." filterBy="#{row.employeeNumber}" filterMatchMode="contains">
                     <h:outputText value="#{row.employeeNumber}" />
                 </p:column>
-                <p:column headerText="First name">
+                <p:column headerText="First name" filterBy="#{row.firstName}" filterMatchMode="contains">
                     <h:outputText value="#{row.firstName}" />
                 </p:column>
-                <p:column headerText="Last name">
+                <p:column headerText="Last name" filterBy="#{row.lastName}" filterMatchMode="contains">
                     <h:outputText value="#{row.lastName}" />
                 </p:column>
-                <p:column headerText="KYC status">
+                <p:column headerText="KYC status" filterBy="#{row.kycStatus}" filterMatchMode="contains">
                     <h:outputText value="#{row.kycStatus}" />
                 </p:column>
                 <p:column headerText="Actions">

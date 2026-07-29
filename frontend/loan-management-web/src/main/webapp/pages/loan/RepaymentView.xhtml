@@ -30,16 +30,16 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Reference">
+                <p:column headerText="Reference" filterBy="#{row.paymentReference}" filterMatchMode="contains">
                     <h:outputText value="#{row.paymentReference}" />
                 </p:column>
-                <p:column headerText="Amount">
+                <p:column headerText="Amount" filterBy="#{row.amount}" filterMatchMode="contains">
                     <h:outputText value="#{row.amount}" />
                 </p:column>
-                <p:column headerText="Payment date">
+                <p:column headerText="Payment date" filterBy="#{row.paymentDate}" filterMatchMode="contains">
                     <h:outputText value="#{row.paymentDate}" />
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" filterBy="#{row.status}" filterMatchMode="contains">
                     <h:outputText value="#{row.status}" />
                 </p:column>
                 <p:column headerText="Actions">

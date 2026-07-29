@@ -14,11 +14,11 @@
         </div>
         <p:tabView>
             <p:tab title="Overview">
-                <p:dataTable value="#{loanView.records}" var="loan" rows="1">
-                    <p:column headerText="Reference">#{loan.loanReference}</p:column>
-                    <p:column headerText="Requested">#{loan.requestedAmount}</p:column>
-                    <p:column headerText="Approved">#{loan.approvedAmount}</p:column>
-                    <p:column headerText="Balance">
+                <p:dataTable globalFilterOnly="true" value="#{loanView.records}" var="loan" rows="1">
+                    <p:column headerText="Reference" filterBy="#{loan.loanReference}" filterMatchMode="contains">#{loan.loanReference}</p:column>
+                    <p:column headerText="Requested" filterBy="#{loan.requestedAmount}" filterMatchMode="contains">#{loan.requestedAmount}</p:column>
+                    <p:column headerText="Approved" filterBy="#{loan.approvedAmount}" filterMatchMode="contains">#{loan.approvedAmount}</p:column>
+                    <p:column headerText="Balance" filterBy="#{loan.outstandingBalance}" filterMatchMode="contains">
                         <h:outputText
                             value="#{loan.outstandingBalance}"
                             rendered="#{loan.status eq 'DISBURSED' or loan.status eq 'ACTIVE' or loan.status eq 'DEFAULTED' or loan.status eq 'COMPLETED'}" />
@@ -26,7 +26,7 @@
                             value="—"
                             rendered="#{not (loan.status eq 'DISBURSED' or loan.status eq 'ACTIVE' or loan.status eq 'DEFAULTED' or loan.status eq 'COMPLETED')}" />
                     </p:column>
-                    <p:column headerText="Status">#{loan.status}</p:column>
+                    <p:column headerText="Status" filterBy="#{loan.status}" filterMatchMode="contains">#{loan.status}</p:column>
                 </p:dataTable>
             </p:tab>
             <p:tab title="Schedule">

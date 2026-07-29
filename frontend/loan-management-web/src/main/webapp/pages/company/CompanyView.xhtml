@@ -38,17 +38,17 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Company">
+                <p:column headerText="Company" filterBy="#{row.name}" filterMatchMode="contains">
                     <h:outputText value="#{row.name}" />
                 </p:column>
-                <p:column headerText="Employee registration link">
+                <p:column headerText="Employee registration link" filterBy="#{row.onboardingCode}" filterMatchMode="contains">
                     <h:outputLink value="#{request.contextPath}/pages/external/employee-onboarding.xhtml">
                         <f:param name="onboard" value="#{row.onboardingCode}" /> Register employees</h:outputLink>
                 </p:column>
-                <p:column headerText="Contact">
+                <p:column headerText="Contact" filterBy="#{row.contactPerson}" filterMatchMode="contains">
                     <h:outputText value="#{row.contactPerson}" />
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" filterBy="#{row.status}" filterMatchMode="contains">
                     <h:outputText value="#{row.status}" />
                 </p:column>
                 <p:column headerText="Actions">

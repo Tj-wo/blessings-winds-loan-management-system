@@ -37,16 +37,16 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Stage">
+                <p:column headerText="Stage" filterBy="#{row.approvalStage}" filterMatchMode="contains">
                     <h:outputText value="#{row.approvalStage}" />
                 </p:column>
-                <p:column headerText="Decision">
+                <p:column headerText="Decision" filterBy="#{row.decision}" filterMatchMode="contains">
                     <h:outputText value="#{row.decision}" />
                 </p:column>
-                <p:column headerText="Offered amount">
+                <p:column headerText="Offered amount" filterBy="#{row.offeredAmount}" filterMatchMode="contains">
                     <h:outputText value="#{row.offeredAmount}" />
                 </p:column>
-                <p:column headerText="Decision time">
+                <p:column headerText="Decision time" filterBy="#{row.decidedAt}" filterMatchMode="contains">
                     <h:outputText value="#{row.decidedAt}" />
                 </p:column>
                 <p:column headerText="Actions">

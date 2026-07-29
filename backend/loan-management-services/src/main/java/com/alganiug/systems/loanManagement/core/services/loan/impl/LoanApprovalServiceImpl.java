@@ -29,8 +29,7 @@ public class LoanApprovalServiceImpl extends GenericServiceImpl<LoanApproval> im
             DocumentType.PASSPORT_PHOTO,
             DocumentType.EMPLOYMENT_LETTER,
             DocumentType.RECENT_PAYSLIP,
-            DocumentType.BANK_CONFIRMATION,
-            DocumentType.SIGNED_LOAN_AGREEMENT);
+            DocumentType.BANK_CONFIRMATION);
 
     public LoanApprovalServiceImpl() {
         super(LoanApproval.class);
@@ -48,6 +47,12 @@ public class LoanApprovalServiceImpl extends GenericServiceImpl<LoanApproval> im
         }
 
         ApprovalStage stage = resolveStage(approval.getDecidedBy());
+        if (stage == ApprovalStage.HR_REVIEW) {
+            if (approval.getDecidedBy().getCompany() == null
+                    || !sameEntity(approval.getDecidedBy().getCompany(), loan.getCompany())) {
+                throw new ServiceValidationException("A supervisor can only review loans for their own company");
+            }
+        }
         approval.setApprovalStage(stage);
         validateStage(stage, loan);
         approval.setLoan(loan);
