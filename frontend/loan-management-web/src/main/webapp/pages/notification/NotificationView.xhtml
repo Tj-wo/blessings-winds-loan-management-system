@@ -51,7 +51,7 @@
                 reflow="true"
                 emptyMessage="You have no notifications"
                 styleClass="management-table">
-                <p:column headerText="Notification">
+                <p:column headerText="Notification" filterBy="#{row.title}" filterMatchMode="contains">
                     <div class="notification-title">
                         <h:panelGroup layout="block" styleClass="notification-unread-dot" rendered="#{empty row.readAt}" />
                         <div>
@@ -60,12 +60,12 @@
                         </div>
                     </div>
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" filterBy="#{empty row.readAt ? 'Unread' : 'Read'}" filterMatchMode="contains">
                     <h:outputText
                         value="#{empty row.readAt ? 'Unread' : 'Read'}"
                         styleClass="status-pill #{empty row.readAt ? 'status-SUBMITTED' : 'status-COMPLETED'}" />
                 </p:column>
-                <p:column headerText="Created">
+                <p:column headerText="Created" filterBy="#{row.createdAt}" filterMatchMode="contains">
                     <h:outputText value="#{row.createdAt}" />
                 </p:column>
                 <p:column headerText="Actions">

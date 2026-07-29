@@ -71,18 +71,18 @@
                     </div>
                     <h:link outcome="/pages/loan/LoanView" value="Open all loans" />
                 </div>
-                <p:dataTable value="#{loanView.records}" var="loan" rows="7" reflow="true" emptyMessage="No employee applications.">
-                    <p:column headerText="Employee">
+                <p:dataTable globalFilterOnly="true" value="#{loanView.records}" var="loan" rows="7" reflow="true" emptyMessage="No employee applications.">
+                    <p:column headerText="Employee" filterBy="#{loan.employee.firstName}" filterMatchMode="contains">
                         <strong>#{loan.employee.firstName} #{loan.employee.lastName}</strong>
                         <small class="table-subtitle">#{loan.employee.employeeNumber}</small>
                     </p:column>
-                    <p:column headerText="Application">
+                    <p:column headerText="Application" filterBy="#{loan.loanReference}" filterMatchMode="contains">
                         <strong>#{loan.loanReference}</strong>
                         <small class="table-subtitle">#{loan.purpose}</small>
                     </p:column>
-                    <p:column headerText="Requested">UGX #{loan.requestedAmount}</p:column>
-                    <p:column headerText="Term">#{loan.requestedTermMonths} months</p:column>
-                    <p:column headerText="Status">
+                    <p:column headerText="Requested" filterBy="#{loan.requestedAmount}" filterMatchMode="contains">UGX #{loan.requestedAmount}</p:column>
+                    <p:column headerText="Term" filterBy="#{loan.requestedTermMonths}" filterMatchMode="contains">#{loan.requestedTermMonths} months</p:column>
+                    <p:column headerText="Status" filterBy="#{loan.status}" filterMatchMode="contains">
                         <span class="status-pill status-#{loan.status}">#{loan.status}</span>
                     </p:column>
                 </p:dataTable>

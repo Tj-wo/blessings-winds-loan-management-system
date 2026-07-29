@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.time.LocalDate;
 import java.math.BigDecimal;
@@ -30,8 +31,30 @@ public class PayrollDeductionServiceImpl extends GenericServiceImpl<PayrollDeduc
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<PayrollDeduction> getInstanceById(UUID id) {
+        if (id == null || !actorHasRole(RoleConstants.ROLE_ADMINISTRATOR)) return Optional.empty();
+        return entityManager.createQuery(
+                        "select deduction from PayrollDeduction deduction "
+                                + "join fetch deduction.batch batch "
+                                + "join fetch batch.company "
+                                + "join fetch deduction.employee employee "
+                                + "join fetch employee.company "
+                                + "join fetch deduction.loan "
+                                + "where deduction.id = :id "
+                                + "and deduction.recordStatus = com.alganiug.systems.loanManagement.models.constants.RecordStatus.ACTIVE",
+                        PayrollDeduction.class)
+                .setParameter("id", id)
+                .getResultStream()
+                .findFirst();
+    }
+    @Override
     public PayrollDeduction saveInstance(PayrollDeduction deduction) {
         requirePresent(deduction, "Payroll deduction");
+        String permission = deduction.getId() == null ? "PAYROLL_DEDUCTION_CREATE" : "PAYROLL_DEDUCTION_EDIT";
+        if (!actorHasRole(RoleConstants.ROLE_ADMINISTRATOR) || !actorHasPermission(permission)) {
+            throw new ServiceValidationException("Only an authorized administrator can save payroll deductions");
+        }
         if (deduction.getId() != null) {
             PayrollDeduction existing = entityManager.find(PayrollDeduction.class, deduction.getId());
             if (existing == null) throw new ServiceValidationException("Payroll deduction was not found");
@@ -45,6 +68,19 @@ public class PayrollDeductionServiceImpl extends GenericServiceImpl<PayrollDeduc
         Loan managedLoan = entityManager.find(Loan.class, deduction.getLoan().getId());
         if (managedBatch == null) throw new ServiceValidationException("Payroll batch was not found");
         if (managedLoan == null) throw new ServiceValidationException("Loan was not found");
+        Long duplicateCount = entityManager.createQuery(
+                        "select count(existing) from PayrollDeduction existing "
+                                + "where existing.batch.id = :batchId and existing.loan.id = :loanId "
+                                + "and existing.recordStatus = com.alganiug.systems.loanManagement.models.constants.RecordStatus.ACTIVE "
+                                + "and (:deductionId is null or existing.id <> :deductionId)", Long.class)
+                .setParameter("batchId", managedBatch.getId())
+                .setParameter("loanId", managedLoan.getId())
+                .setParameter("deductionId", deduction.getId())
+                .getSingleResult();
+        if (duplicateCount > 0) {
+            throw new ServiceValidationException(
+                    "This loan already has a deduction in the selected payroll batch. Edit the existing deduction instead.");
+        }
         deduction.setBatch(managedBatch);
         deduction.setLoan(managedLoan);
         deduction.setEmployee(managedLoan.getEmployee());
@@ -71,10 +107,7 @@ public class PayrollDeductionServiceImpl extends GenericServiceImpl<PayrollDeduc
     @Override
     public PayrollDeduction markRepaid(PayrollDeduction deduction, User supervisor) {
         PayrollDeduction managed = managedDeduction(deduction);
-        requireRole(supervisor, RoleConstants.ROLE_HR_SUPERVISOR, "Only a supervisor can mark a deduction as repaid");
-        if (supervisor.getCompany() == null || !sameEntity(supervisor.getCompany(), managed.getEmployee().getCompany())) {
-            throw new ServiceValidationException("A supervisor can only update deductions for their company");
-        }
+        requireRole(supervisor, RoleConstants.ROLE_ADMINISTRATOR, "Only an administrator can mark a deduction as repaid");
         if (managed.getStatus() != DeductionStatus.PENDING && managed.getStatus() != DeductionStatus.PARTIAL
                 && managed.getStatus() != DeductionStatus.UNMATCHED) {
             throw new ServiceValidationException("Only a pending deduction can be marked as repaid");

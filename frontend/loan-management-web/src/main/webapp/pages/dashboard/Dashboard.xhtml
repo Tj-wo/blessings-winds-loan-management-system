@@ -78,17 +78,17 @@
                     </div>
                     <h:link outcome="/pages/loan/LoanView" value="View full portfolio" />
                 </div>
-                <p:dataTable value="#{loanView.records}" var="loan" rows="8" reflow="true" emptyMessage="No loans in the portfolio.">
-                    <p:column headerText="Borrower">
+                <p:dataTable globalFilterOnly="true" value="#{loanView.records}" var="loan" rows="8" reflow="true" emptyMessage="No loans in the portfolio.">
+                    <p:column headerText="Borrower" filterBy="#{loan.employee.firstName}" filterMatchMode="contains">
                         <strong>#{loan.employee.firstName} #{loan.employee.lastName}</strong>
                         <small class="table-subtitle">#{loan.company.name}</small>
                     </p:column>
-                    <p:column headerText="Reference">
+                    <p:column headerText="Reference" filterBy="#{loan.loanReference}" filterMatchMode="contains">
                         <strong>#{loan.loanReference}</strong>
                         <small class="table-subtitle">#{loan.product.name}</small>
                     </p:column>
-                    <p:column headerText="Requested">UGX #{loan.requestedAmount}</p:column>
-                    <p:column headerText="Outstanding">
+                    <p:column headerText="Requested" filterBy="#{loan.requestedAmount}" filterMatchMode="contains">UGX #{loan.requestedAmount}</p:column>
+                    <p:column headerText="Outstanding" filterBy="#{loan.outstandingBalance}" filterMatchMode="contains">
                         <h:outputText
                             value="UGX #{loan.outstandingBalance}"
                             rendered="#{ loan.status eq 'DISBURSED' or loan.status eq 'ACTIVE' or loan.status eq 'LATE' or loan.status eq 'DEFAULTED' }" />
@@ -96,7 +96,7 @@
                             value="—"
                             rendered="#{ not ( loan.status eq 'DISBURSED' or loan.status eq 'ACTIVE' or loan.status eq 'LATE' or loan.status eq 'DEFAULTED' ) }" />
                     </p:column>
-                    <p:column headerText="Status">
+                    <p:column headerText="Status" filterBy="#{loan.status}" filterMatchMode="contains">
                         <span class="status-pill status-#{loan.status}">#{loan.status}</span>
                     </p:column>
                 </p:dataTable>
@@ -171,20 +171,20 @@
                     <h:link outcome="/pages/payroll/PayrollDeductionView" value="Open reconciliation workspace" />
                 </div>
                 <p:messages showDetail="true" closable="true" />
-                <p:dataTable
+                <p:dataTable globalFilterOnly="true"
                     value="#{payrollDeductionView.repaidRecords}"
                     var="deduction"
                     rows="6"
                     reflow="true"
                     emptyMessage="No repaid deductions are awaiting confirmation.">
-                    <p:column headerText="Employee">
+                    <p:column headerText="Employee" filterBy="#{deduction.employee.firstName}" filterMatchMode="contains">
                         <strong>#{deduction.employee.firstName} #{deduction.employee.lastName}</strong>
                         <small class="table-subtitle">#{deduction.employee.employeeNumber}</small>
                     </p:column>
-                    <p:column headerText="Loan">#{deduction.loan.loanReference}</p:column>
-                    <p:column headerText="Payroll batch">#{deduction.batch.batchReference}</p:column>
-                    <p:column headerText="Expected">UGX #{deduction.expectedAmount}</p:column>
-                    <p:column headerText="Reported paid">UGX #{deduction.deductedAmount}</p:column>
+                    <p:column headerText="Loan" filterBy="#{deduction.loan.loanReference}" filterMatchMode="contains">#{deduction.loan.loanReference}</p:column>
+                    <p:column headerText="Payroll batch" filterBy="#{deduction.batch.batchReference}" filterMatchMode="contains">#{deduction.batch.batchReference}</p:column>
+                    <p:column headerText="Expected" filterBy="#{deduction.expectedAmount}" filterMatchMode="contains">UGX #{deduction.expectedAmount}</p:column>
+                    <p:column headerText="Reported paid" filterBy="#{deduction.deductedAmount}" filterMatchMode="contains">UGX #{deduction.deductedAmount}</p:column>
                     <p:column headerText="Action">
                         <p:commandButton
                             icon="pi pi-verified"

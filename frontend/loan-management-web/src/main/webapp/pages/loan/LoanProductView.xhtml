@@ -38,16 +38,16 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Product">
+                <p:column headerText="Product" filterBy="#{row.name}" filterMatchMode="contains">
                     <h:outputText value="#{row.name}" />
                 </p:column>
-                <p:column headerText="Minimum">
+                <p:column headerText="Minimum" filterBy="#{row.minimumAmount}" filterMatchMode="contains">
                     <h:outputText value="#{row.minimumAmount}" />
                 </p:column>
-                <p:column headerText="Maximum">
+                <p:column headerText="Maximum" filterBy="#{row.maximumAmount}" filterMatchMode="contains">
                     <h:outputText value="#{row.maximumAmount}" />
                 </p:column>
-                <p:column headerText="Rate">
+                <p:column headerText="Rate" filterBy="#{row.monthlyInterestRate}" filterMatchMode="contains">
                     <h:outputText value="#{row.monthlyInterestRate}" />
                 </p:column>
                 <p:column headerText="Actions">

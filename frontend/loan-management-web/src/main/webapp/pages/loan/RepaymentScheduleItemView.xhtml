@@ -30,16 +30,16 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Installment">
+                <p:column headerText="Installment" filterBy="#{row.installmentNumber}" filterMatchMode="contains">
                     <h:outputText value="#{row.installmentNumber}" />
                 </p:column>
-                <p:column headerText="Due date">
+                <p:column headerText="Due date" filterBy="#{row.dueDate}" filterMatchMode="contains">
                     <h:outputText value="#{row.dueDate}" />
                 </p:column>
-                <p:column headerText="Expected">
+                <p:column headerText="Expected" filterBy="#{row.expectedAmount}" filterMatchMode="contains">
                     <h:outputText value="#{row.expectedAmount}" />
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" filterBy="#{row.status}" filterMatchMode="contains">
                     <h:outputText value="#{row.status}" />
                 </p:column>
                 <p:column headerText="Actions">

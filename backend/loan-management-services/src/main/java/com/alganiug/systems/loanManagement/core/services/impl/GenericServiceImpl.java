@@ -160,6 +160,42 @@ public abstract class GenericServiceImpl<T extends BaseEntity> implements Generi
         return first != null && second != null && first.getId() != null && first.getId().equals(second.getId());
     }
 
+    protected UUID requireActorId() {
+        UUID actorId = AuditContext.getActorId();
+        if (actorId == null) throw new ServiceOperationException("Authentication is required");
+        return actorId;
+    }
+
+    protected boolean actorHasRole(String roleName) {
+        UUID actorId = requireActorId();
+        return entityManager.createQuery(
+                        "select count(role) from User actor join actor.roles role where actor.id = :actorId "
+                                + "and role.name = :roleName and actor.recordStatus = :recordStatus", Long.class)
+                .setParameter("actorId", actorId).setParameter("roleName", roleName)
+                .setParameter("recordStatus", RecordStatus.ACTIVE).getSingleResult() > 0;
+    }
+
+    protected boolean actorHasPermission(String permissionCode) {
+        UUID actorId = requireActorId();
+        return entityManager.createQuery(
+                        "select count(permission) from User actor join actor.roles role "
+                                + "join role.rolePermissions assignment join assignment.permission permission "
+                                + "where actor.id = :actorId and permission.code = :permissionCode "
+                                + "and actor.recordStatus = :recordStatus and role.recordStatus = :recordStatus "
+                                + "and assignment.recordStatus = :recordStatus and permission.recordStatus = :recordStatus", Long.class)
+                .setParameter("actorId", actorId).setParameter("permissionCode", permissionCode)
+                .setParameter("recordStatus", RecordStatus.ACTIVE).getSingleResult() > 0;
+    }
+
+    protected UUID actorEmployeeId() {
+        return entityManager.createQuery("select actor.employee.id from User actor where actor.id = :actorId", UUID.class)
+                .setParameter("actorId", requireActorId()).getResultStream().findFirst().orElse(null);
+    }
+
+    protected UUID actorCompanyId() {
+        return entityManager.createQuery("select actor.company.id from User actor where actor.id = :actorId", UUID.class)
+                .setParameter("actorId", requireActorId()).getResultStream().findFirst().orElse(null);
+    }
     private void requireEntity(T entityInstance) {
         if (entityInstance == null) {
             throw new ServiceValidationException("Entity instance is required");

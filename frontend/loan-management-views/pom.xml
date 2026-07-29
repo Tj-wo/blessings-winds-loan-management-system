@@ -10,6 +10,7 @@
     <dependency><groupId>org.glassfish</groupId><artifactId>javax.faces</artifactId><version>${javax.faces.version}</version><scope>provided</scope></dependency>
     <dependency><groupId>javax.annotation</groupId><artifactId>javax.annotation-api</artifactId><version>1.3.2</version></dependency>
     <dependency><groupId>javax.el</groupId><artifactId>javax.el-api</artifactId><version>3.0.0</version><scope>provided</scope></dependency>
+    <dependency><groupId>javax.servlet</groupId><artifactId>javax.servlet-api</artifactId><version>${javax.servlet.version}</version><scope>provided</scope></dependency>
     <dependency><groupId>org.primefaces</groupId><artifactId>primefaces</artifactId><version>${primefaces.version}</version></dependency>
   </dependencies>
 </project>

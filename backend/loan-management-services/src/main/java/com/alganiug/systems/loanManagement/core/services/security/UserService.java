@@ -29,7 +29,9 @@ public interface UserService extends GenericService<User> {
 
     boolean accountExists(String usernameOrEmail);
 
-    void resetPassword(String usernameOrEmail, String newPassword);
+    void requestPasswordResetOtp(String email);
+
+    void resetPasswordWithOtp(String email, String otp, String newPassword);
 
     User updateAccountStatus(User user, AccountStatus accountStatus);
 }

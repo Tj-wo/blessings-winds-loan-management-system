@@ -38,22 +38,22 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Batch">
+                <p:column headerText="Batch" filterBy="#{row.batchReference}" filterMatchMode="contains">
                     <h:outputText value="#{row.batchReference}" />
                 </p:column>
-                <p:column headerText="Payroll period">
+                <p:column headerText="Payroll period" filterBy="#{row.payrollPeriod}" filterMatchMode="contains">
                     <h:outputText value="#{row.payrollPeriod}" />
                 </p:column>
-                <p:column headerText="Loans">
+                <p:column headerText="Loans" filterBy="#{row.recordCount}" filterMatchMode="contains">
                     <h:outputText value="#{row.recordCount}" />
                 </p:column>
-                <p:column headerText="Expected">
+                <p:column headerText="Expected" filterBy="#{row.expectedTotal}" filterMatchMode="contains">
                     <h:outputText value="#{row.expectedTotal}" />
                 </p:column>
-                <p:column headerText="Received">
+                <p:column headerText="Received" filterBy="#{row.receivedTotal}" filterMatchMode="contains">
                     <h:outputText value="#{row.receivedTotal}" />
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" filterBy="#{row.status}" filterMatchMode="contains">
                     <h:outputText value="#{row.status}" />
                 </p:column>
                 <p:column headerText="Actions">

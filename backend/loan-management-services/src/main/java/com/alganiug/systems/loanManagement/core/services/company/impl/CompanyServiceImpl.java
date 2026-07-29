@@ -10,6 +10,9 @@ import com.alganiug.systems.loanManagement.models.security.RoleConstants;
 import com.alganiug.systems.loanManagement.models.security.User;
 import com.alganiug.systems.loanManagement.core.services.ServiceValidationException;
 import com.alganiug.systems.loanManagement.core.services.security.UserService;
+import com.alganiug.systems.loanManagement.core.services.notification.EmailService;
+import com.alganiug.systems.loanManagement.core.services.audit.AuditContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.alganiug.systems.loanManagement.utils.PasswordUtil;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -17,9 +20,14 @@ import org.springframework.stereotype.Service;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
+import java.security.SecureRandom;
 
 @Service
 public class CompanyServiceImpl extends GenericServiceImpl<Company> implements CompanyService {
+
+    private static final String PASSWORD_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
+    private final SecureRandom secureRandom = new SecureRandom();
+    @Autowired private EmailService emailService;
 
     public CompanyServiceImpl() {
         super(Company.class);
@@ -29,6 +37,16 @@ public class CompanyServiceImpl extends GenericServiceImpl<Company> implements C
     @Transactional
     public Company saveInstance(Company company) {
         boolean creating = company != null && company.getId() == null;
+        if (AuditContext.getActorId() != null) {
+            String permission = creating ? "COMPANY_CREATE" : "COMPANY_EDIT";
+            if (!actorHasPermission(permission)) throw new ServiceValidationException("You are not allowed to save companies");
+            if (!creating && !actorHasRole(RoleConstants.ROLE_ADMINISTRATOR)) {
+                UUID companyId = actorCompanyId();
+                if (company == null || companyId == null || !companyId.equals(company.getId())) {
+                    throw new ServiceValidationException("You cannot edit another company");
+                }
+            }
+        }
         if (creating) {
             ensureContactAccountCanBeCreated(company);
         }
@@ -38,6 +56,16 @@ public class CompanyServiceImpl extends GenericServiceImpl<Company> implements C
             createContactAccount(savedCompany);
         }
         return savedCompany;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Company> getInstanceById(UUID id) {
+        Optional<Company> company = super.getInstanceById(id);
+        if (!company.isPresent() || AuditContext.getActorId() == null
+                || actorHasRole(RoleConstants.ROLE_ADMINISTRATOR)) return company;
+        UUID companyId = actorCompanyId();
+        return companyId != null && companyId.equals(company.get().getId()) ? company : Optional.empty();
     }
 
     private void ensureContactAccountCanBeCreated(Company company) {
@@ -68,11 +96,22 @@ public class CompanyServiceImpl extends GenericServiceImpl<Company> implements C
         user.setUsername(username);
         user.setEmail(username);
         user.setDisplayName(company.getContactPerson().trim());
-        user.setPasswordHash(PasswordUtil.hash(UserService.DEFAULT_COMPANY_CONTACT_PASSWORD));
+        String temporaryPassword = temporaryPassword();
+        user.setPasswordHash(PasswordUtil.hash(temporaryPassword));
         user.setAccountStatus(AccountStatus.PENDING);
         user.setCompany(company);
         user.getRoles().add(hrRole);
         entityManager.persist(user);
+        emailService.send(user.getEmail(), "Your Blessed Winds Loans company account",
+                "Your company account has been created.\n\nUsername: " + user.getUsername()
+                        + "\nTemporary password: " + temporaryPassword
+                        + "\n\nYour account must be activated before sign-in.");
+    }
+
+    private String temporaryPassword() {
+        StringBuilder password = new StringBuilder(14);
+        for (int i = 0; i < 14; i++) password.append(PASSWORD_CHARS.charAt(secureRandom.nextInt(PASSWORD_CHARS.length())));
+        return password.toString();
     }
     @Override
     @org.springframework.transaction.annotation.Transactional(readOnly = true)

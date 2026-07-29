@@ -30,16 +30,16 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Transaction">
+                <p:column headerText="Transaction" filterBy="#{row.transactionReference}" filterMatchMode="contains">
                     <h:outputText value="#{row.transactionReference}" />
                 </p:column>
-                <p:column headerText="Amount">
+                <p:column headerText="Amount" filterBy="#{row.amount}" filterMatchMode="contains">
                     <h:outputText value="#{row.amount}" />
                 </p:column>
-                <p:column headerText="Method">
+                <p:column headerText="Method" filterBy="#{row.method}" filterMatchMode="contains">
                     <h:outputText value="#{row.method}" />
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" filterBy="#{row.status}" filterMatchMode="contains">
                     <h:outputText value="#{row.status}" />
                 </p:column>
                 <p:column headerText="Actions">

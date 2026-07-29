@@ -37,16 +37,16 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Reason">
+                <p:column headerText="Reason" filterBy="#{row.reason}" filterMatchMode="contains">
                     <h:outputText value="#{row.reason}" />
                 </p:column>
-                <p:column headerText="Amount">
+                <p:column headerText="Amount" filterBy="#{row.amount}" filterMatchMode="contains">
                     <h:outputText value="#{row.amount}" />
                 </p:column>
-                <p:column headerText="Assessed">
+                <p:column headerText="Assessed" filterBy="#{row.assessedOn}" filterMatchMode="contains">
                     <h:outputText value="#{row.assessedOn}" />
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" filterBy="#{row.status}" filterMatchMode="contains">
                     <h:outputText value="#{row.status}" />
                 </p:column>
                 <p:column headerText="Actions">

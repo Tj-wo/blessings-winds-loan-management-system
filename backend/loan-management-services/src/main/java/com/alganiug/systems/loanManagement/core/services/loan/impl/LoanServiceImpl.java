@@ -36,7 +36,48 @@ public class LoanServiceImpl extends GenericServiceImpl<Loan> implements LoanSer
     @Override
     public Loan saveInstance(Loan loan) {
         boolean creating = loan != null && loan.getId() == null;
+        requirePresent(loan, "Loan application");
+        UUID employeeActorId = actorEmployeeId();
+        if (creating) {
+            if (employeeActorId == null || loan.getEmployee() == null
+                    || !employeeActorId.equals(loan.getEmployee().getId())) {
+                throw new ServiceValidationException("Employees can only create their own loan applications");
+            }
+        } else {
+            Loan existing = entityManager.find(Loan.class, loan.getId());
+            if (existing == null || existing.getRecordStatus() == RecordStatus.DELETED) {
+                throw new ServiceValidationException("Loan application was not found");
+            }
+            if (employeeActorId != null) {
+                if (!employeeActorId.equals(existing.getEmployee().getId())) {
+                    throw new ServiceValidationException("You cannot edit another employee's loan application");
+                }
+                if (existing.getStatus() != LoanStatus.DRAFT && existing.getStatus() != LoanStatus.CHANGES_REQUESTED) {
+                    throw new ServiceValidationException("Only draft or changes-requested applications can be edited");
+                }
+            } else {
+                if (!actorHasPermission("LOAN_EDIT")) throw new ServiceValidationException("You are not allowed to edit loans");
+                UUID companyId = actorCompanyId();
+                if (companyId != null && !companyId.equals(existing.getCompany().getId())) {
+                    throw new ServiceValidationException("You cannot edit loans outside your company");
+                }
+            }
+        }
         List<Document> reusableDocuments = creating ? requireCompleteKyc(loan) : Collections.emptyList();
+        if (creating && !booleanSetting("loans.allow-concurrent-active", false)) {
+            Long activeLoans = entityManager.createQuery(
+                            "select count(existing) from Loan existing where existing.employee.id = :employeeId "
+                                    + "and existing.status in :statuses and existing.recordStatus = :recordStatus", Long.class)
+                    .setParameter("employeeId", loan.getEmployee().getId())
+                    .setParameter("statuses", Arrays.asList(LoanStatus.DISBURSED, LoanStatus.ACTIVE,
+                            LoanStatus.LATE, LoanStatus.DEFAULTED))
+                    .setParameter("recordStatus", RecordStatus.ACTIVE)
+                    .getSingleResult();
+            if (activeLoans > 0) {
+                throw new ServiceValidationException(
+                        "You already have an active loan. Concurrent applications are disabled by the administrator.");
+            }
+        }
         Loan saved = super.saveInstance(loan);
         if (creating) {
             attachKycDocuments(saved, reusableDocuments);
@@ -115,8 +156,23 @@ public class LoanServiceImpl extends GenericServiceImpl<Loan> implements LoanSer
         requirePresent(loan, "Loan");
         Loan managedLoan = getInstanceById(loan.getId())
                 .orElseThrow(() -> new ServiceValidationException("Loan was not found"));
+        UUID actorCompanyId = actorCompanyId();
+        if (actorCompanyId != null && !actorCompanyId.equals(managedLoan.getCompany().getId())) {
+            throw new ServiceValidationException("You cannot disburse a loan outside your company");
+        }
         if (managedLoan.getStatus() != LoanStatus.APPROVED) {
             throw new ServiceValidationException("Only a loan with final administrator approval can be disbursed");
+        }
+        Long signedAgreements = entityManager.createQuery(
+                        "select count(document) from Document document where document.loan.id = :loanId "
+                                + "and document.documentType = :documentType and document.recordStatus = :recordStatus",
+                        Long.class)
+                .setParameter("loanId", managedLoan.getId())
+                .setParameter("documentType", DocumentType.SIGNED_LOAN_AGREEMENT)
+                .setParameter("recordStatus", RecordStatus.ACTIVE)
+                .getSingleResult();
+        if (signedAgreements == 0) {
+            throw new ServiceValidationException("A signed loan agreement must be uploaded before disbursement");
         }
         managedLoan.setStatus(LoanStatus.DISBURSED);
         managedLoan.setDisbursedOn(LocalDate.now());
@@ -237,6 +293,16 @@ public class LoanServiceImpl extends GenericServiceImpl<Loan> implements LoanSer
         entityManager.persist(notification);
     }
 
+    private boolean booleanSetting(String key, boolean defaultValue) {
+        List<String> values = entityManager.createQuery(
+                        "select setting.settingValue from SystemSetting setting where setting.settingKey = :key "
+                                + "and setting.recordStatus = :recordStatus", String.class)
+                .setParameter("key", key)
+                .setParameter("recordStatus", RecordStatus.ACTIVE)
+                .setMaxResults(1)
+                .getResultList();
+        return values.isEmpty() ? defaultValue : Boolean.parseBoolean(values.get(0));
+    }
     private void prepareApplicationTerms(Loan loan) {
         if (loan == null || loan.getId() != null || loan.getProduct() == null
                 || loan.getRequestedAmount() == null || loan.getRequestedTermMonths() < 1) {

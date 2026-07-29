@@ -38,13 +38,13 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Role">
+                <p:column headerText="Role" filterBy="#{row.name}" filterMatchMode="contains">
                     <h:outputText value="#{row.name}" />
                 </p:column>
-                <p:column headerText="Description">
+                <p:column headerText="Description" filterBy="#{row.description}" filterMatchMode="contains">
                     <h:outputText value="#{row.description}" />
                 </p:column>
-                <p:column headerText="Record status">
+                <p:column headerText="Record status" filterBy="#{row.recordStatus}" filterMatchMode="contains">
                     <h:outputText value="#{row.recordStatus}" />
                 </p:column>
                 <p:column headerText="Actions">

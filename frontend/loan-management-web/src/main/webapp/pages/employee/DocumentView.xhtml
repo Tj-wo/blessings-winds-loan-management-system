@@ -38,21 +38,21 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Filename">
+                <p:column headerText="Filename" filterBy="#{row.originalFilename}" filterMatchMode="contains">
                     <h:outputText value="#{row.originalFilename}" />
                 </p:column>
-                <p:column headerText="Employee">
+                <p:column headerText="Employee" filterBy="#{row.employee.employeeNumber}" filterMatchMode="contains">
                     <h:outputText value="#{row.employee.firstName} #{row.employee.lastName}" />
                     <br />
                     <h:outputText value="#{row.employee.employeeNumber}" styleClass="text-muted" />
                 </p:column>
-                <p:column headerText="Type">
+                <p:column headerText="Type" filterBy="#{row.documentType}" filterMatchMode="contains">
                     <h:outputText value="#{row.documentType}" />
                 </p:column>
-                <p:column headerText="Verification">
+                <p:column headerText="Verification" filterBy="#{row.verificationStatus}" filterMatchMode="contains">
                     <h:outputText value="#{row.verificationStatus}" />
                 </p:column>
-                <p:column headerText="Size">
+                <p:column headerText="Size" filterBy="#{row.contentSize}" filterMatchMode="contains">
                     <h:outputText value="#{row.contentSize}" />
                 </p:column>
                 <p:column headerText="Actions" styleClass="document-actions-column">

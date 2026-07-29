@@ -16,6 +16,7 @@
         <div class="layout-wrapper">
             <ui:include src="topbar.xhtml"/>
             <ui:include src="sidebar.xhtml"/>
+            <button type="button" class="sidebar-backdrop" aria-label="Close navigation menu" onclick="return window.BWNavigation.close();"></button>
             <main class="layout-main">
                 <ui:insert name="content"/>
             </main>
@@ -26,5 +27,23 @@
                 <i class="pi pi-spin pi-spinner global-loader"/>
             </f:facet>
         </p:ajaxStatus>
+        <script type="text/javascript">
+            window.BWNavigation = {
+                toggle: function(button) {
+                    var open = document.body.classList.toggle('mobile-menu-open');
+                    button.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    return false;
+                },
+                close: function() {
+                    document.body.classList.remove('mobile-menu-open');
+                    var button = document.querySelector('.mobile-menu-toggle');
+                    if (button) button.setAttribute('aria-expanded', 'false');
+                    return false;
+                }
+            };
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') window.BWNavigation.close();
+            });
+        </script>
     </h:body>
 </html>

@@ -16,10 +16,7 @@ import java.util.UUID;
 @Service
 public class NotificationServiceImpl extends GenericServiceImpl<Notification> implements NotificationService {
 
-    private static final String VISIBLE_TO_USER =
-            "(recipient.id = :userId "
-                    + "or (:companyId is not null and recipient.company.id = :companyId) "
-                    + "or audienceRole.id in (select role.id from User user join user.roles role where user.id = :userId))";
+    private static final String VISIBLE_TO_USER = "recipient.id = :userId";
 
     public NotificationServiceImpl() {
         super(Notification.class);
@@ -37,7 +34,6 @@ public class NotificationServiceImpl extends GenericServiceImpl<Notification> im
                                 + " order by notification.createdAt desc", Notification.class)
                 .setParameter("recordStatus", RecordStatus.ACTIVE)
                 .setParameter("userId", userId)
-                .setParameter("companyId", companyId)
                 .getResultList();
     }
 
@@ -53,7 +49,6 @@ public class NotificationServiceImpl extends GenericServiceImpl<Notification> im
                                 + "and notification.readAt is null and " + VISIBLE_TO_USER, Long.class)
                 .setParameter("recordStatus", RecordStatus.ACTIVE)
                 .setParameter("userId", userId)
-                .setParameter("companyId", companyId)
                 .getSingleResult();
     }
 
@@ -71,7 +66,6 @@ public class NotificationServiceImpl extends GenericServiceImpl<Notification> im
                 .setParameter("notificationId", notificationId)
                 .setParameter("recordStatus", RecordStatus.ACTIVE)
                 .setParameter("userId", userId)
-                .setParameter("companyId", companyId)
                 .getResultList();
         if (matches.isEmpty()) throw new IllegalArgumentException("Notification not found.");
         Notification notification = matches.get(0);

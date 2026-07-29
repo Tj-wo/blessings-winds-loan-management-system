@@ -30,16 +30,16 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Code">
+                <p:column headerText="Code" filterBy="#{row.code}" filterMatchMode="contains">
                     <h:outputText value="#{row.code}" />
                 </p:column>
-                <p:column headerText="Permission">
+                <p:column headerText="Permission" filterBy="#{row.name}" filterMatchMode="contains">
                     <h:outputText value="#{row.name}" />
                 </p:column>
-                <p:column headerText="Description">
+                <p:column headerText="Description" filterBy="#{row.description}" filterMatchMode="contains">
                     <h:outputText value="#{row.description}" />
                 </p:column>
-                <p:column headerText="Status">
+                <p:column headerText="Status" filterBy="#{row.recordStatus}" filterMatchMode="contains">
                     <h:outputText value="#{row.recordStatus}" />
                 </p:column>
                 <p:column headerText="Actions"></p:column>

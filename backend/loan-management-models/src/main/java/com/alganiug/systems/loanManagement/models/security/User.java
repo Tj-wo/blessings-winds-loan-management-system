@@ -53,6 +53,15 @@ public class User extends BaseEntity {
 
     private LocalDateTime lastLoginAt;
 
+    @Column(name = "password_reset_otp_hash", length = 255)
+    private String passwordResetOtpHash;
+
+    @Column(name = "password_reset_otp_expires_at")
+    private LocalDateTime passwordResetOtpExpiresAt;
+
+    @Column(name = "password_reset_otp_attempts", nullable = false)
+    private int passwordResetOtpAttempts;
+
     public String getUsername() {
         return username;
     }
@@ -120,4 +129,11 @@ public class User extends BaseEntity {
     public void setLastLoginAt(LocalDateTime v) {
         lastLoginAt = v;
     }
+
+    public String getPasswordResetOtpHash() { return passwordResetOtpHash; }
+    public void setPasswordResetOtpHash(String value) { passwordResetOtpHash = value; }
+    public LocalDateTime getPasswordResetOtpExpiresAt() { return passwordResetOtpExpiresAt; }
+    public void setPasswordResetOtpExpiresAt(LocalDateTime value) { passwordResetOtpExpiresAt = value; }
+    public int getPasswordResetOtpAttempts() { return passwordResetOtpAttempts; }
+    public void setPasswordResetOtpAttempts(int value) { passwordResetOtpAttempts = value; }
 }

@@ -38,16 +38,16 @@
                 reflow="true"
                 emptyMessage="No records found"
                 styleClass="management-table">
-                <p:column headerText="Key">
+                <p:column headerText="Key" filterBy="#{row.settingKey}" filterMatchMode="contains">
                     <h:outputText value="#{row.settingKey}" />
                 </p:column>
-                <p:column headerText="Value">
+                <p:column headerText="Value" filterBy="#{row.settingValue}" filterMatchMode="contains">
                     <h:outputText value="#{row.settingValue}" />
                 </p:column>
-                <p:column headerText="Category">
+                <p:column headerText="Category" filterBy="#{row.category}" filterMatchMode="contains">
                     <h:outputText value="#{row.category}" />
                 </p:column>
-                <p:column headerText="Type">
+                <p:column headerText="Type" filterBy="#{row.valueType}" filterMatchMode="contains">
                     <h:outputText value="#{row.valueType}" />
                 </p:column>
                 <p:column headerText="Actions">

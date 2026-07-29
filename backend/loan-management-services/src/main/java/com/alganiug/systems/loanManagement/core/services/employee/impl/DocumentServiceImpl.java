@@ -77,14 +77,8 @@ public class DocumentServiceImpl extends GenericServiceImpl<Document> implements
         if (managed.getLoan() != null || managed.getDocumentType() == DocumentType.SIGNED_LOAN_AGREEMENT) {
             throw new ServiceValidationException("Only original employee KYC documents can be reviewed here");
         }
-        boolean administrator = hasRole(reviewer, RoleConstants.ROLE_ADMINISTRATOR);
-        boolean supervisor = hasRole(reviewer, RoleConstants.ROLE_HR_SUPERVISOR);
-        if (!administrator && !supervisor) {
-            throw new ServiceValidationException("Only a supervisor or administrator can review KYC documents");
-        }
-        if (!administrator && (reviewer.getCompany() == null
-                || !sameEntity(reviewer.getCompany(), managed.getEmployee().getCompany()))) {
-            throw new ServiceValidationException("A supervisor can only review KYC for their company");
+        if (!hasRole(reviewer, RoleConstants.ROLE_ADMINISTRATOR)) {
+            throw new ServiceValidationException("Only a system administrator can review KYC documents");
         }
         managed.setVerificationStatus(status);
         managed.setReviewedBy(entityManager.getReference(User.class, reviewer.getId()));
@@ -128,9 +122,7 @@ public class DocumentServiceImpl extends GenericServiceImpl<Document> implements
         Document document = matches.get(0);
         boolean owner = viewer.getEmployee() != null && sameEntity(viewer.getEmployee(), document.getEmployee());
         boolean administrator = hasRole(viewer, RoleConstants.ROLE_ADMINISTRATOR);
-        boolean companySupervisor = hasRole(viewer, RoleConstants.ROLE_HR_SUPERVISOR)
-                && viewer.getCompany() != null && sameEntity(viewer.getCompany(), document.getEmployee().getCompany());
-        return owner || administrator || companySupervisor ? Optional.of(document) : Optional.empty();
+        return owner || administrator ? Optional.of(document) : Optional.empty();
     }
     @Override
     protected void validate(Document document) {
